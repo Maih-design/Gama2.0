@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}التحويلات الطبية المعلقة - المنظومة الطبية الموحدة{% endblock %}
+
+{% block content %}
+<div class="cmp-page-header">
+    <div>
+        <h1 class="cmp-page-header__title">طابور خطابات التحويل الطبي بانتظار الإصدار</h1>
+        <p class="cmp-page-header__subtitle">مراجعة قرارات اللجان الطبية الإيجابية، صياغة الخطابات، وتوجيه المرضى للمراكز المستهدفة.</p>
+    </div>
+    <div>
+        <a href="{% url 'referrals:issued_referrals' %}" class="cmp-btn cmp-btn--secondary">
+            <span>عرض الخطابات الصادرة والمقرة</span>
+        </a>
+    </div>
+</div>
+
+<!-- Dashboard Queue Grid Layout Context Blueprint -->
+{% if pending_cases %}
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        {% for case in pending_cases %}
+            <div class="dsh-panel animate-fade-in" style="border-right: 4px solid var(--primary); padding: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1.5rem;">
+                    <div style="flex: 1; min-width: 300px;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                            <span class="cmp-badge cmp-badge--success" style="font-weight: 700;">قرار لجنة معتمد وصادر</span>
+                            <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">رقم المعاملة الطبية الموحد: #{{ case.pk }}</span>
+                        </div>
+                        
+                        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text); margin-bottom: 0.5rem;">{{ case.patient.full_name }}</h2>
+                        <div style="font-family: monospace; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.25rem; font-weight: 600;">الرقم القومي للمريض: {{ case.patient.national_id }}</div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 0.25rem;">توصية وقرار اللجنة الرسمية:</span>
+                            <div style="background: var(--bg); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.95rem; line-height: 1.6; color: var(--text);">
+                                {{ case.recommendation }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tactical Workflow Operational Controls Box -->
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 240px; background: rgba(4, 120, 87, 0.02); padding: 1.25rem; border: 1px solid var(--border); border-radius: var(--radius-md);">
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem;">الإجراء الإداري اللازم:</div>
+                        
+                        {% if case.referral_center %}
+                            <div style="font-size: 0.9rem; color: var(--text); margin-bottom: 0.5rem;">
+                                الجهة الموصى بها المقررة:<br><strong style="color: var(--primary);">{{ case.referral_center.name }}</strong>
+                            </div>
+                            <a href="{% url 'referrals:create_referral_from_case' case.pk %}" class="cmp-btn cmp-btn--primary" style="text-align: center; justify-content: center; width: 100%;">
+                                <span>إصدار خطاب التحويل المعتمد</span>
+                            </a>
+                        {% else %}
+                            <div style="font-size: 0.85rem; color: var(--danger); font-weight: 600; margin-bottom: 0.5rem;">لم يتم اختيار مركز توجيه بالقرار الصادر.</div>
+                            <a href="{% url 'referrals:assign_center_and_create' case.pk %}" class="cmp-btn cmp-btn--secondary" style="text-align: center; justify-content: center; width: 100%; border-color: var(--secondary); color: var(--secondary);">
+                                <span>تحديد الجهة وصياغة الخطاب</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% include 'partials/pagination.html' %}
+{% else %}
+    {% include 'partials/empty_state.html' with title="طابور خطابات التحويل فارغ" text="تم تفريغ وإصدار كافة خطابات التحويل الطارئة للقرارات الصادرة من اللجان الطبية المعنية." action_url="/committee/sessions/" action_text="مراجعة اللجان الطبية المنعقدة" %}
+{% endif %}
+{% endblock %}

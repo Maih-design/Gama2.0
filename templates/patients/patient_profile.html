@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}الملف الطبي للمريض - {{ patient.full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prf-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+    .prf-meta-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); height: fit-content; }
+    .prf-meta-card__avatar { width: 80px; height: 80px; background: rgba(4, 120, 87, 0.1); color: var(--primary); font-size: 2.25rem; font-weight: 800; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-full); margin: 0 auto 1.5rem auto; }
+    .prf-meta-card__name { font-size: 1.35rem; font-weight: 700; text-align: center; color: var(--text); margin-bottom: 0.5rem; }
+    .prf-meta-card__id { font-family: monospace; font-size: 0.95rem; text-align: center; color: var(--text-muted); margin-bottom: 2rem; letter-spacing: 0.05em; }
+    .prf-data-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--bg); font-size: 0.95rem; }
+    .prf-data-row:last-child { border-bottom: none; }
+    .prf-data-row__label { color: var(--text-muted); font-weight: 600; }
+    .prf-data-row__value { color: var(--text); font-weight: 700; }
+    .prf-tabs-content { display: flex; flex-direction: column; gap: 2rem; }
+    @media (max-width: 992px) { .prf-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header Action Context Bar -->
+<div class="cmp-page-header">
+    <div>
+        <h1 class="cmp-page-header__title">ملف المريض الإلكتروني الموحد</h1>
+        <p class="cmp-page-header__subtitle">تصفح البيانات الديموغرافية، التقرير الطبي ومطابقة الوثائق والمستندات المرفوعة.</p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+        <button class="cmp-btn cmp-btn--secondary" data-action="print-document">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span>طباعة الملف البروفيلي</span>
+        </button>
+        <a href="{% url 'patients:patient_update' patient.pk %}" class="cmp-btn cmp-btn--primary">بيانات التحديث المباشر</a>
+    </div>
+</div>
+
+<div class="prf-grid">
+    <!-- Left Column: Core Demographic Summary Panel Card -->
+    <aside class="prf-meta-card">
+        <div class="prf-meta-card__avatar">
+            {{ patient.full_name|slice:":1" }}
+        </div>
+        <h2 class="prf-meta-card__name">{{ patient.full_name }}</h2>
+        <div class="prf-meta-card__id">{{ patient.national_id }}</div>
+        
+        <div class="prf-data-row">
+            <span class="prf-data-row__label">الجنس</span>
+            <span class="prf-data-row__value">{{ patient.get_gender_display }}</span>
+        </div>
+        <div class="prf-data-row">
+            <span class="prf-data-row__label">تاريخ الميلاد</span>
+            <span class="prf-data-row__value">{{ patient.birth_date|date:"Y-m-d" }}</span>
+        </div>
+        <div class="prf-data-row">
+            <span class="prf-data-row__label">رقم الهاتف</span>
+            <span class="prf-data-row__value" style="direction: ltr;">{{ patient.phone_number }}</span>
+        </div>
+        <div class="prf-data-row">
+            <span class="prf-data-row__label">المحافظة</span>
+            <span class="prf-data-row__value">{{ patient.get_governorate_display }}</span>
+        </div>
+        <div class="prf-data-row">
+            <span class="prf-data-row__label">الفرع التابع له</span>
+            <span class="prf-data-row__value"><span class="cmp-badge cmp-badge--success">{{ patient.get_affiliated_branch_display }}</span></span>
+        </div>
+        <div class="prf-data-row">
+            <span class="prf-data-row__label">تاريخ التسجيل</span>
+            <span class="prf-data-row__value">{{ patient.created_at|date:"Y-m-d" }}</span>
+        </div>
+    </aside>
+
+    <!-- Right Column: Documents and Medical Workspaces -->
+    <div class="prf-tabs-content">
+        <!-- Diagnostic Summary Panel Segment -->
+        <div class="dsh-panel">
+            <h3 class="dsh-panel__title" style="color: var(--primary);">التشخيص الطبي المبدئي الساري المعتمد</h3>
+            <div style="background: var(--bg); padding: 1.25rem; border-radius: var(--radius-sm); font-size: 1rem; line-height: 1.7; color: var(--text); border-right: 4px solid var(--secondary);">
+                {{ patient.diagnosis|linebreaksbr }}
+            </div>
+        </div>
+
+        <!-- Document Repository and Upload Engine Workspace -->
+        <div class="dsh-panel">
+            <h3 class="dsh-panel__title">أرشيف المستندات والملفات المرفوعة</h3>
+            
+            <!-- Upload Modal Context Inline Block Form -->
+            <form action="{% url 'patients:upload_document' patient.pk %}" method="post" enctype="multipart/form-data" style="background: rgba(20, 184, 166, 0.02); border: 1px dashed var(--border); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
+                {% csrf_token %}
+                <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 1rem; color: var(--primary);">رفع مستند رسمي إضافي جديد للمريض:</div>
+                <div class="frm-row" style="align-items: flex-end;">
+                    <div class="frm-group" style="margin: 0;">
+                        <label class="frm-label">نوع المستند الطبي المرفق</label>
+                        <select name="document_type" class="frm-select" required>
+                            <option value="NID">بطاقة الرقم القومي</option>
+                            <option value="REP">تقرير طبي</option>
+                            <option value="LAB">نتائج التحاليل</option>
+                            <option value="RAD">الأشعة</option>
+                        </select>
+                    </div>
+                    <div class="frm-group" style="margin: 0;">
+                        <label class="frm-label">ملف المستند المستهدف</label>
+                        <input type="file" name="file" class="frm-input" required style="padding: 0.55rem 1rem;">
+                    </div>
+                    <button type="submit" class="cmp-btn cmp-btn--primary" style="height: 44px;">بدء الرفع والحفظ</button>
+                </div>
+            </form>
+
+            <!-- Document List Render Loop Grid -->
+            {% if patient.documents.all %}
+                <div class="tbl-wrapper" style="margin: 0; box-shadow: none;">
+                    <div class="tbl-container">
+                        <table class="tbl-data">
+                            <thead>
+                                <tr>
+                                    <th>نوع المستند الرسمي المرفق</th>
+                                    <th>تاريخ ووقت الرفع والأرشفة</th>
+                                    <th>الإجراءات المتاحة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doc in patient.documents.all %}
+                                <tr>
+                                    <td style="font-weight: 700;">{{ doc.get_document_type_display }}</td>
+                                    <td>{{ doc.created_at|date:"Y-m-d H:i" }}</td>
+                                    <td class="tbl-actions">
+                                        <a href="{{ doc.file.url }}" target="_blank" class="cmp-btn cmp-btn--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            <span>عرض الملف المستندى</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem 0; font-size: 0.95rem;">
+                    لا يوجد ملفات أو وثائق مؤرشفة ملحقة بسجل المريض الحالي حتى تاريخه.
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Historical Committee Sessions Association Dynamic Timeline Tracking Summary -->
+        <div class="dsh-panel">
+            <h3 class="dsh-panel__title">تاريخ العرض على اللجان الطبية والقرارات الصادرة</h3>
+            {% if patient.committee_cases.all %}
+                <div class="tbl-wrapper" style="margin: 0; box-shadow: none;">
+                    <div class="tbl-container">
+                        <table class="tbl-data">
+                            <thead>
+                                <tr>
+                                    <th>رقم وعنوان الجلسة</th>
+                                    <th>الحالة والقرار الصادر</th>
+                                    <th>تاريخ الانعقاد</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for case in patient.committee_cases.all %}
+                                <tr>
+                                    <td style="font-weight: 700;">
+                                        <a href="{% url 'committee:session_detail' case.committee_session.pk %}" style="color: var(--primary);">
+                                            {{ case.committee_session }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if case.status == 'APP' %}
+                                            <span class="cmp-badge cmp-badge--success">{{ case.get_status_display }}</span>
+                                        {% elif case.status == 'REJ' %}
+                                            <span class="cmp-badge cmp-badge--danger">{{ case.get_status_display }}</span>
+                                        {% else %}
+                                            <span class="cmp-badge cmp-badge--warning">{{ case.get_status_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ case.committee_session.session_date|date:"Y-m-d" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem 0; font-size: 0.95rem;">
+                    المريض لم يتم إدراجه أو عرضه على أي لجنة طبية مسجلة بالنظام حتى الآن.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

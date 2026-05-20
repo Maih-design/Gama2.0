@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}تعديل بيانات المريض{% else %}تسجيل مريض جديد{% endif %} - نظام إدارة اللجان الطبية{% endblock %}
+
+{% block content %}
+<!-- Page Context Header -->
+<div class="cmp-page-header">
+    <div>
+        <h1 class="cmp-page-header__title">{% if form.instance.pk %}تعديل ملف مريض ساري{% else %}تسجيل مريض جديد بالمنظومة{% endif %}</h1>
+        <p class="cmp-page-header__subtitle">يرجى ملء البيانات بدقة لضمان صحة الإجراءات والتحويلات الطبية اللاحقة.</p>
+    </div>
+    <div>
+        <a href="{% url 'patients:patient_list' %}" class="cmp-btn cmp-btn--secondary">العودة للسجل</a>
+    </div>
+</div>
+
+<!-- Implementation Form Architecture Container -->
+<div class="frm-container animate-fade-in" style="max-width: 960px; margin: 0 auto;">
+    <form method="post" id="patientMasterForm" novalidate>
+        {% csrf_token %}
+        
+        <!-- Non-Field Validation Errors Feedback Frame -->
+        {% if form.non_field_errors %}
+            <div class="cmp-alert cmp-alert--danger" style="margin-bottom: 1.5rem; position: relative; top: 0; left: 0; max-width: 100%;">
+                <div>{{ form.non_field_errors|striptags }}</div>
+            </div>
+        {% endif %}
+
+        <!-- Row 1: Identification & Demographics -->
+        <div class="frm-row">
+            <div class="frm-group">
+                <label for="{{ form.national_id.id_for_label }}" class="frm-label">{{ form.national_id.label }} *</label>
+                <input type="text" name="national_id" id="{{ form.national_id.id_for_label }}" class="frm-input {% if form.national_id.errors %}frm-input--error{% endif %}" max_length="14" value="{{ form.national_id.value|default:'' }}" placeholder="2990101XXXXXXXX">
+                {% if form.national_id.errors %}
+                    <ul class="frm-errors">{% for error in form.national_id.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+            
+            <div class="frm-group">
+                <label for="{{ form.full_name.id_for_label }}" class="frm-label">{{ form.full_name.label }} *</label>
+                <input type="text" name="full_name" id="{{ form.full_name.id_for_label }}" class="frm-input" value="{{ form.full_name.value|default:'' }}">
+                {% if form.full_name.errors %}
+                    <ul class="frm-errors">{% for error in form.full_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Row 2: Birth, Sex, & Contacts -->
+        <div class="frm-row">
+            <div class="frm-group">
+                <label for="{{ form.birth_date.id_for_label }}" class="frm-label">{{ form.birth_date.label }} *</label>
+                <input type="date" name="birth_date" id="{{ form.birth_date.id_for_label }}" class="frm-input" value="{% if form.birth_date.value %}{{ form.birth_date.value|date:'Y-m-d' }}{% elif form.instance.birth_date %}{{ form.instance.birth_date|date:'Y-m-d' }}{% endif %}">
+                {% if form.birth_date.errors %}
+                    <ul class="frm-errors">{% for error in form.birth_date.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+
+            <div class="frm-group">
+                <label for="{{ form.gender.id_for_label }}" class="frm-label">{{ form.gender.label }} *</label>
+                <select name="gender" id="{{ form.gender.id_for_label }}" class="frm-select">
+                    {% for value, text in form.fields.gender.choices %}
+                        <option value="{{ value }}" {% if form.gender.value == value %}selected{% endif %}>{{ text }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.gender.errors %}
+                    <ul class="frm-errors">{% for error in form.gender.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+
+            <div class="frm-group">
+                <label for="{{ form.phone_number.id_for_label }}" class="frm-label">{{ form.phone_number.label }} *</label>
+                <input type="text" name="phone_number" id="{{ form.phone_number.id_for_label }}" class="frm-input" value="{{ form.phone_number.value|default:'' }}">
+                {% if form.phone_number.errors %}
+                    <ul class="frm-errors">{% for error in form.phone_number.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Row 3: Region Geography Routing mapping parameters -->
+        <div class="frm-row">
+            <div class="frm-group">
+                <label for="{{ form.governorate.id_for_label }}" class="frm-label">{{ form.governorate.label }} *</label>
+                <select name="governorate" id="{{ form.governorate.id_for_label }}" class="frm-select">
+                    {% for value, text in form.fields.governorate.choices %}
+                        <option value="{{ value }}" {% if form.governorate.value == value %}selected{% endif %}>{{ text }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.governorate.errors %}
+                    <ul class="frm-errors">{% for error in form.governorate.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+
+            <div class="frm-group">
+                <label for="{{ form.affiliated_branch.id_for_label }}" class="frm-label">{{ form.affiliated_branch.label }} *</label>
+                <select name="affiliated_branch" id="{{ form.affiliated_branch.id_for_label }}" class="frm-select">
+                    {% for value, text in form.fields.affiliated_branch.choices %}
+                        <option value="{{ value }}" {% if form.affiliated_branch.value == value %}selected{% endif %}>{{ text }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.affiliated_branch.errors %}
+                    <ul class="frm-errors">{% for error in form.affiliated_branch.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Row 4: Initial Diagnostic Narrative -->
+        <div class="frm-group">
+            <label for="{{ form.diagnosis.id_for_label }}" class="frm-label">{{ form.diagnosis.label }} *</label>
+            <textarea name="diagnosis" id="{{ form.diagnosis.id_for_label }}" class="frm-textarea" rows="4">{{ form.diagnosis.value|default:'' }}</textarea>
+            {% if form.diagnosis.errors %}
+                <ul class="frm-errors">{% for error in form.diagnosis.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+
+        <!-- Form Interaction Control Triggers Dashboard Pipeline -->
+        <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+            <input type="hidden" name="add_another" id="idAddAnotherField" value="0">
+            
+            <button type="button" class="cmp-btn cmp-btn--secondary" onclick="window.history.back();">إلغاء الإجراء</button>
+            
+            {% if not form.instance.pk %}
+                <button type="submit" class="cmp-btn cmp-btn--secondary" id="btnSaveAndAddNew">حفظ وتسجيل مريض آخر</button>
+            {% endif %}
+            
+            <button type="submit" class="cmp-btn cmp-btn--primary" id="btnPrimaryFormSubmit">حفظ البيانات واعتمادها</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('patientMasterForm');
+        const addAnotherField = document.getElementById('idAddAnotherField');
+        const saveAndAddBtn = document.getElementById('btnSaveAndAddNew');
+
+        if (saveAndAddBtn && addAnotherField && form) {
+            saveAndAddBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                addAnotherField.value = "1";
+                form.submit();
+            });
+        }
+    });
+</script>
+{% endblock %}

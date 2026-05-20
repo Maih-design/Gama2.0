@@ -1,0 +1,8 @@
+<form method="get" action="" class="frm-search-wrapper">
+    <input type="text" 
+           name="q" 
+           value="{{ request.GET.q|default:'' }}" 
+           placeholder="{{ placeholder|default:'ابحث هنا...' }}" 
+           class="frm-input frm-search-input"
+           aria-label="البحث العام">
+</form>

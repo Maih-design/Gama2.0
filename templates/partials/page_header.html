@@ -1,0 +1,15 @@
+<div class="cmp-page-header">
+    <div>
+        <h1 class="cmp-page-header__title">{{ title }}</h1>
+        {% if subtitle %}
+            <p class="cmp-page-header__subtitle">{{ subtitle }}</p>
+        {% endif %}
+    </div>
+    {% if action_url and action_text %}
+    <div>
+        <a href="{{ action_url }}" class="cmp-btn cmp-btn--primary">
+            <span>{{ action_text }}</span>
+        </a>
+    </div>
+    {% endif %}
+</div>

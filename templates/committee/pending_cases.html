@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}المداولة الطبية والحالات المعلقة{% endblock %}
+
+{% block content %}
+<div class="cmp-page-header">
+    <div>
+        <h1 class="cmp-page-header__title">الحالات الطبية المعلقة وبانتظار المداولة والقرارات</h1>
+        <p class="cmp-page-header__subtitle">مراجعة وفحص ملفات التشخيص للمرضى المدرجين في لجان نشطة حالياً ولم تقر توصياتهم حتى الآن.</p>
+    </div>
+</div>
+
+{% if pending_cases %}
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        {% for case in pending_cases %}
+            <div class="dsh-panel animate-fade-in" style="border-right: 4px solid var(--warning); padding: 1.5rem 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1.5rem;">
+                    <div style="flex: 1; min-width: 300px;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                            <span class="cmp-badge cmp-badge--warning" style="font-weight: 700;">بانتظار المداولة وإقرار التوصية الطبية</span>
+                            <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">تابعة للجلسة الانعقادية: <strong>{{ case.committee_session.session_title }}</strong></span>
+                        </div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">
+                            <a href="{% url 'patients:patient_profile' case.patient.pk %}" style="text-decoration: none; color: inherit;">
+                                {{ case.patient.full_name }}
+                            </a>
+                        </h2>
+                        <div style="font-family: monospace; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; font-weight: 600;">الرقم القومي: {{ case.patient.national_id }}</div>
+                        
+                        <div style="background: var(--bg); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.95rem; line-height: 1.6; color: var(--text);">
+                            <strong>التشخيص المعروض بالملف:</strong> {{ case.patient.diagnosis }}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 200px;">
+                        <a href="{% url 'committee:recommendation_form' case.pk %}" class="cmp-btn cmp-btn--primary" style="text-align: center; justify-content: center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            <span>اتخاذ القرار الطبي وإصدار التوصية</span>
+                        </a>
+                        <a href="{% url 'patients:patient_profile' case.patient.pk %}" class="cmp-btn cmp-btn--secondary" style="text-align: center; justify-content: center;">
+                            <span>استعراض ملف الوثائق والأشعة</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% include 'partials/pagination.html' %}
+{% else %}
+    {% include 'partials/empty_state.html' with title="لا يوجد حالات معلقة بانتظار القرارات" text="تمت مداولة واعتماد كافة الحالات والملفات الطبية المدرجة لجميع اللجان والاجتماعات بنجاح التام." action_url="/committee/sessions/" action_text="الاستعراض العام للجان والمؤرشفات" %}
+{% endif %}
+{% endblock %}

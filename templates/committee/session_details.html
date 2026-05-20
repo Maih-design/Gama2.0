@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}تفاصيل جلسة اللجنة الطبية #{{ session.pk }}{% endblock %}
+
+{% block content %}
+<div class="cmp-page-header">
+    <div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+            <h1 class="cmp-page-header__title">{{ session.session_title }}</h1>
+            <span class="cmp-badge {% if session.is_active %}cmp-badge--success{% else %}cmp-badge--warning{% endif %}">
+                {% if session.is_active %}نشطة حالياً{% else %}مؤرشفة ومغلقة{% endif %}
+            </span>
+        </div>
+        <p class="cmp-page-header__subtitle">رئيس اللجنة الطبية الحالي المسؤول: <strong>{{ session.doctor.doctor_name }}</strong> | تاريخ العمل المعتمد: {{ session.session_date|date:"Y-m-d" }}</p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+        <a href="{% url 'committee:sessions_list' %}" class="cmp-btn cmp-btn--secondary">العودة للسجل الموحد</a>
+        {% if session.is_active %}
+            <a href="{% url 'committee:add_cases_to_session' session.pk %}" class="cmp-btn cmp-btn--primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>إلحاق وإدراج مرضى للجلسة الآن</span>
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Matrix Pipeline Grid Workspace Tracker For Cases Inside This Room Session -->
+<div class="dsh-panel">
+    <h3 class="dsh-panel__title">ملفات وحالات المرضى المدرجين على جدول أعمال الجلسة الحالية</h3>
+    
+    {% if session.cases.all %}
+        <div class="tbl-wrapper" style="margin: 0; box-shadow: none;">
+            <div class="tbl-container">
+                <table class="tbl-data">
+                    <thead>
+                        <tr>
+                            <th>رقم المعاملة</th>
+                            <th>الرقم القومي للمريض</th>
+                            <th>اسم المريض ثلاثي/رباعي</th>
+                            <th>التشخيص المعروض</th>
+                            <th>وضعية وحالة القرار والاعتماد</th>
+                            <th>التوصية والقرار الصادر</th>
+                            <th>الإجراءات التنفيذية للقرار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for case in session.cases.all %}
+                        <tr>
+                            <td style="font-family: monospace; font-weight: 600;">#{{ case.pk }}</td>
+                            <td style="font-family: monospace; font-size: 0.9rem;">{{ case.patient.national_id }}</td>
+                            <td>
+                                <a href="{% url 'patients:patient_profile' case.patient.pk %}" style="font-weight: 700; color: var(--primary); text-decoration: none;">
+                                    {{ case.patient.full_name }}
+                                </a>
+                            </td>
+                            <td><div style="max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ case.patient.diagnosis }}</div></td>
+                            <td>
+                                {% if case.status == 'APP' %}
+                                    <span class="cmp-badge cmp-badge--success">{{ case.get_status_display }}</span>
+                                {% elif case.status == 'REJ' %}
+                                    <span class="cmp-badge cmp-badge--danger">{{ case.get_status_display }}</span>
+                                {% else %}
+                                    <span class="cmp-badge cmp-badge--warning">{{ case.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <em style="font-size: 0.9rem; color: var(--text); font-weight: 500;">{{ case.recommendation|default:"بانتظار المداولة الطبية والفحص..." }}</em>
+                            </td>
+                            <td class="tbl-actions">
+                                {% if session.is_active %}
+                                    <a href="{% url 'committee:recommendation_form' case.pk %}" class="cmp-btn cmp-btn--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: var(--secondary); color: var(--secondary);">
+                                        إقرار التوصية الطبية
+                                    </a>
+                                {% else %}
+                                    <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">مغلق ومعتمد</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1rem; color: var(--border-focus);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem;">جدول أعمال اللجنة فارغ</h4>
+            <p style="font-size: 0.95rem; margin-bottom: 1.5rem;">لم يتم ربط أو إدراج أي مريض بجلسة الانعقاد الحالية الطبية بعد.</p>
+            {% if session.is_active %}
+                <a href="{% url 'committee:add_cases_to_session' session.pk %}" class="cmp-btn cmp-btn--primary" style="display: inline-flex;">بدء ربط وإدراج ملفات المرضى للجلسة الآن</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

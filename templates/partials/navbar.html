@@ -1,0 +1,33 @@
+<nav class="cmp-navbar">
+    <div class="cmp-navbar__container">
+        <div class="cmp-navbar__brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg>
+            <span>اللجان الطبية</span>
+        </div>
+
+        <div class="cmp-navbar__nav-links">
+            <a href="{% url 'core:homepage' %}" class="cmp-navbar__link {% if request.resolver_match.app_name == 'core' %}cmp-navbar__link--active{% endif %}">الرئيسية</a>
+            <a href="{% url 'patients:patient_list' %}" class="cmp-navbar__link {% if request.resolver_match.app_name == 'patients' %}cmp-navbar__link--active{% endif %}">المرضى</a>
+            <a href="{% url 'committee:sessions_list' %}" class="cmp-navbar__link {% if request.resolver_match.app_name == 'committee' %}cmp-navbar__link--active{% endif %}">جلسات اللجان</a>
+            <a href="{% url 'referrals:pending_referrals' %}" class="cmp-navbar__link {% if request.resolver_match.app_name == 'referrals' %}cmp-navbar__link--active{% endif %}">التحويلات الطبية</a>
+        </div>
+
+        <div class="cmp-navbar__user-menu">
+            <button class="cmp-navbar__avatar-btn" id="navbarUserMenuBtn" aria-haspopup="true" aria-expanded="false">
+                <div class="cmp-navbar__avatar">
+                    {{ request.user.username|slice:":1"|upper|default:"ط" }}
+                </div>
+            </button>
+            <div class="cmp-dropdown" id="navbarUserDropdown">
+                <div style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted);">
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </div>
+                <a href="{% url 'admin:index' %}" class="cmp-dropdown__item">لوحة الإدارة</a>
+                <form action="{% url 'admin:logout' %}" method="post" style="margin: 0; width: 100%;">
+                    {% csrf_token %}
+                    <button type="submit" class="cmp-dropdown__item" style="color: var(--danger);">تسجيل الخروج</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>

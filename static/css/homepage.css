@@ -1,0 +1,192 @@
+/* Premium Homepage Context Layout */
+.hmp-welcome {
+    background: linear-gradient(135deg, rgba(4, 120, 87, 0.05) 0%, rgba(20, 184, 166, 0.02) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hmp-welcome::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+    border-radius: var(--radius-full);
+    pointer-events: none;
+}
+
+.hmp-welcome__title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.hmp-welcome__meta {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+/* Quick Actions Widget */
+.hmp-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.hmp-action-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: var(--transition-bounce);
+}
+
+.hmp-action-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--secondary);
+    box-shadow: var(--shadow-lg);
+}
+
+.hmp-action-card__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    background: var(--bg);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: var(--transition-smooth);
+}
+
+.hmp-action-card:hover .hmp-action-card__icon {
+    background: var(--primary);
+    color: var(--text-on-primary);
+}
+
+.hmp-action-card__title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* Operational Workflow Layout Section split */
+.hmp-workspace-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+@media (max-width: 1024px) {
+    .hmp-workspace-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hmp-widget-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.hmp-widget-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: var(--transition-smooth);
+}
+
+.hmp-widget-item:hover {
+    border-color: var(--border-focus);
+    background: rgba(247, 253, 252, 0.5);
+}
+
+/* Printable Requirements Card Design Spec */
+.hmp-printable-card {
+    background: var(--surface);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.hmp-printable-card__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed var(--border);
+}
+
+.hmp-printable-card__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.hmp-printable-card__item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.hmp-printable-card__item::before {
+    content: "✓";
+    color: var(--secondary);
+    font-weight: 700;
+}
+
+/* Specific Isolated Print Rules Boundary */
+@media print {
+    body.hmp-print-isolated-mode .lyt-app-wrapper > *:not(.lyt-main-content),
+    body.hmp-print-isolated-mode .lyt-main-content > *:not(.hmp-workspace-grid),
+    body.hmp-print-isolated-mode .hmp-workspace-grid > *:not(.hmp-printable-card-target-wrapper),
+    body.hmp-print-isolated-mode .hmp-printable-card__btn {
+        display: none !important;
+    }
+
+    body.hmp-print-isolated-mode .lyt-main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    body.hmp-print-isolated-mode .hmp-printable-card {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 3cm !important;
+        width: 100% !important;
+        direction: rtl !important;
+    }
+}

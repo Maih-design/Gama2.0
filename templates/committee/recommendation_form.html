@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}إقرار التوصية والقرار الطبي للمريض {{ case.patient.full_name }}{% endblock %}
+
+{% block content %}
+<div class="cmp-page-header">
+    <div>
+        <h1 class="cmp-page-header__title">المداولة الرسمية وإصدار توصية اللجنة وقرار الاعتماد النهائي</h1>
+        <p class="cmp-page-header__subtitle">صياغة نص القرار الإداري والطبي النهائي وإبداء مرئيات اللجان لحالة المريض.</p>
+    </div>
+    <div>
+        <a href="{% url 'committee:session_detail' case.committee_session.pk %}" class="cmp-btn cmp-btn--secondary">العودة لغرفة الانعقاد</a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 3fr; gap: 2rem; align-items: flex-start; max-width: 1200px; margin: 0 auto;">
+    
+    <!-- Left Layout Context: Fixed Snapshot Summary For Patient File Under Consultation -->
+    <div class="dsh-panel" style="position: sticky; top: 2rem;">
+        <h3 class="dsh-panel__title" style="color: var(--primary);">ملخص معطيات الحالة المعروضة</h3>
+        
+        <div style="font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 0.25rem;">{{ case.patient.full_name }}</div>
+        <div style="font-family: monospace; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 600;">الرقم القومي: {{ case.patient.national_id }}</div>
+        
+        <div style="margin-bottom: 1rem; font-size: 0.95rem;">
+            <strong style="color: var(--text-muted); display: block; margin-bottom: 0.25rem;">التشخيص الساري المسجل بالملف:</strong>
+            <div style="background: var(--bg); padding: 1rem; border-radius: var(--radius-sm); line-height: 1.6;">
+                {{ case.patient.diagnosis }}
+            </div>
+        </div>
+
+        <div style="font-size: 0.9rem; color: var(--text-muted);">
+            <div><strong>جلسة الانعقاد الطبية:</strong> {{ case.committee_session.session_title }}</div>
+            <div><strong>رئيس اللجنة المستشار:</strong> {{ case.committee_session.doctor.doctor_name }}</div>
+        </div>
+    </div>
+
+    <!-- Right Layout Context: Final Recommendation Form Action Matrix Interface Dashboard -->
+    <div class="frm-container animate-fade-in" style="margin: 0;">
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="cmp-alert cmp-alert--danger" style="margin-bottom: 1.5rem; position: relative; top: 0; left: 0; max-width: 100%;">
+                    <div>{{ form.non_field_errors|striptags }}</div>
+                </div>
+            {% endif %}
+
+            <div class="frm-group">
+                <label for="{{ form.status.id_for_label }}" class="frm-label">حالة القرار والاعتماد النهائي المعتمد للجنة *</label>
+                <select name="status" id="{{ form.status.id_for_label }}" class="frm-select" style="font-weight: 700; color: var(--primary);">
+                    {% for value, text in form.fields.status.choices %}
+                        <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ text }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.status.errors %}
+                    <ul class="frm-errors">{% for error in form.status.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+
+            <div class="frm-group">
+                <label for="{{ form.recommendation.id_for_label }}" class="frm-label">الصياغة والنص القانوني للتوصية الطبية والقرار الصادر *</label>
+                <textarea name="recommendation" id="{{ form.recommendation.id_for_label }}" class="frm-textarea" rows="6" placeholder="اكتب نص القرار بالتفصيل، الجهة والمسارات العلاجية المقرة من قبل أعضاء اللجنة بدقة تفصيلية واضحة..."></textarea>
+                {% if form.recommendation.errors %}
+                    <ul class="frm-errors">{% for error in form.recommendation.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+
+            <div class="frm-group" id="referralCenterSelectionWrapper" style="display: none; background: rgba(20, 184, 166, 0.02); padding: 1.25rem; border: 1px solid var(--border); border-radius: var(--radius-md); margin-top: 1.5rem;">
+                <label for="id_referral_center" class="frm-label" style="color: var(--primary); font-weight: 700;">المركز الطبي أو الجهة الخارجية الموجه إليها التحويل المقر *</label>
+                <select name="referral_center" id="id_referral_center" class="frm-select">
+                    <option value="">-- اختر المركز الطبي الخارجي المستهدف بالتوجيه --</option>
+                    {% for center in referral_centers %}
+                        <option value="{{ center.pk }}">{{ center.name }} ({{ center.get_location_display|default:"محلي" }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                <button type="button" class="cmp-btn cmp-btn--secondary" onclick="window.history.back();">إلغاء المداولة ومراجعة الملفات</button>
+                <button type="submit" class="cmp-btn cmp-btn--primary">اعتماد وإمضاء القرار الطبي رسمياً بالفور</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const statusSelect = document.getElementById('id_status');
+    const referralWrapper = document.getElementById('referralCenterSelectionWrapper');
+    const referralSelect = document.getElementById('id_referral_center');
+
+    if (statusSelect && referralWrapper) {
+        function toggleReferralFields() {
+            // Context Logic Trigger: If status equals approved 'APP' display external targeting infrastructure routing parameters
+            if (statusSelect.value === 'APP') {
+                referralWrapper.style.display = 'block';
+                if (referralSelect) referralSelect.setAttribute('required', 'required');
+            } else {
+                referralWrapper.style.display = 'none';
+                if (referralSelect) {
+                    referralSelect.removeAttribute('required');
+                    referralSelect.value = '';
+                }
+            }
+        }
+
+        statusSelect.addEventListener('change', toggleReferralFields);
+        toggleReferralFields(); // Fire operational cycle check initially on load state boundaries frame
+    }
+});
+</script>
+{% endblock %}

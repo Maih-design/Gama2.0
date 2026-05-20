@@ -1,0 +1,12 @@
+<div class="cmp-empty-state">
+    <div class="cmp-empty-state__icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+    </div>
+    <h3 class="cmp-empty-state__title">{{ title|default:"لا يوجد بيانات لعرضها" }}</h3>
+    <p class="cmp-empty-state__text">{{ text|default:"لم يتم العثور على سجلات مطابقة في النظام حتى الآن." }}</p>
+    {% if action_url and action_text %}
+        <a href="{{ action_url }}" class="cmp-btn cmp-btn--primary">
+            <span>{{ action_text }}</span>
+        </a>
+    {% endif %}
+</div>

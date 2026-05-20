@@ -1,0 +1,48 @@
+.lyt-app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.lyt-main-content {
+    flex: 1 1 auto;
+    padding: 2.5rem 2rem 4rem 2rem;
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    animation: anim-fade-in 0.4s ease-out;
+}
+
+.lyt-grid-dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.lyt-grid-split {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 1200px) {
+    .lyt-grid-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .lyt-grid-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .lyt-main-content {
+        padding: 1.5rem 1rem;
+    }
+    .lyt-grid-dashboard {
+        grid-template-columns: 1fr;
+    }
+}

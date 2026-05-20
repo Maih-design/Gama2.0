@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}صياغة وإصدار خطاب تحويل رسمي{% endblock %}
+
+{% block content %}
+<div class="cmp-page-header">
+    <div>
+        <h1 class="cmp-page-header__title">صياغة وإصدار وثيقة خطاب التحويل الخارجي الرسمي</h1>
+        <p class="cmp-page-header__subtitle">تثبيت وتأصيل المركز العلاجي المستهدف ومراجعة بنود المخرجات الموجهة للمستشفى الخارجي.</p>
+    </div>
+    <div>
+        <a href="{% url 'referrals:pending_referrals' %}" class="cmp-btn cmp-btn--secondary">العودة لطابور الانتظار</a>
+    </div>
+</div>
+
+<div class="frm-container animate-fade-in" style="max-width: 800px; margin: 0 auto;">
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div style="background: rgba(4, 120, 87, 0.02); border-right: 4px solid var(--primary); padding: 1.25rem; border-radius: var(--radius-sm); margin-bottom: 2rem;">
+            <div style="font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">ملف المعاملة الطبية للمريض المقر من اللجنة:</div>
+            <div style="font-size: 1.15rem; font-weight: 800; color: var(--text);">{{ case.patient.full_name }}</div>
+            <div style="font-family: monospace; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-top: 0.25rem;">الرقم القومي: {{ case.patient.national_id }}</div>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="cmp-alert cmp-alert--danger" style="margin-bottom: 1.5rem; position: relative; top: 0; left: 0; max-width: 100%;">
+                <div>{{ form.non_field_errors|striptags }}</div>
+            </div>
+        {% endif %}
+
+        <div class="frm-group">
+            <label for="{{ form.referral_center.id_for_label }}" class="frm-label">المستشفى أو المركز الطبي الخارجي المستهدف بالتوجيه والتحويل *</label>
+            <select name="referral_center" id="{{ form.referral_center.id_for_label }}" class="frm-select" style="font-weight: 700; color: var(--primary);">
+                {% for value, text in form.fields.referral_center.choices %}
+                    <option value="{{ value }}" {% if form.referral_center.value == value %}selected{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+            {% if form.referral_center.errors %}
+                <ul class="frm-errors">{% for error in form.referral_center.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+
+        <div class="frm-group">
+            <label for="{{ form.additional_notes.id_for_label }}" class="frm-label">ملاحظات، توجيهات إدارية، أو اشتراطات طبية إضافية تدرج بالخطاب المطبوع</label>
+            <textarea name="additional_notes" id="{{ form.additional_notes.id_for_label }}" class="frm-textarea" rows="5" placeholder="اكتب أي تعليمات إضافية تود إلحاقها وتضمينها بالخطاب الموجه لمدير المستشفى المستهدف الخارجي بالدقة المطلوبة..."></textarea>
+            {% if form.additional_notes.errors %}
+                <ul class="frm-errors">{% for error in form.additional_notes.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+            <button type="button" class="cmp-btn cmp-btn--secondary" onclick="window.history.back();">إلغاء وصرف النظر</button>
+            <button type="submit" class="cmp-btn cmp-btn--primary">حفظ الخطاب بالسجل وتوليد وثيقة الطباعة الفورية</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

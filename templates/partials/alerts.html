@@ -1,0 +1,12 @@
+{% if messages %}
+<div class="cmp-alert-container" aria-live="polite">
+    {% for message in messages %}
+    <div class="cmp-alert {% if message.tags == 'success' %}cmp-alert--success{% elif message.tags == 'warning' %}cmp-alert--warning{% elif message.tags == 'error' %}cmp-alert--danger{% endif %}">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span>{{ message }}</span>
+        </div>
+        <button class="cmp-alert__close" aria-label="إغلاق التنبيه">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

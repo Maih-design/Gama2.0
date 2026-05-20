@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}تشكيل لجنة طبية جديدة{% endblock %}
+
+{% block content %}
+<div class="cmp-page-header">
+    <div>
+        <h1 class="cmp-page-header__title">تشكيل وغرفة انعقاد لجنة طبية جديدة</h1>
+        <p class="cmp-page-header__subtitle">تأصيل معطيات اللجنة، واختيار الطبيب المسؤول لإقرار الحالات الطبية.</p>
+    </div>
+    <div>
+        <a href="{% url 'committee:sessions_list' %}" class="cmp-btn cmp-btn--secondary">العودة للسجل</a>
+    </div>
+</div>
+
+<div class="frm-container animate-fade-in" style="max-width: 800px; margin: 0 auto;">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="cmp-alert cmp-alert--danger" style="margin-bottom: 1.5rem; position: relative; top: 0; left: 0; max-width: 100%;">
+                <div>{{ form.non_field_errors|striptags }}</div>
+            </div>
+        {% endif %}
+
+        <div class="frm-group">
+            <label for="{{ form.session_title.id_for_label }}" class="frm-label">مسمى وعنوان اللجنة الطبية الحالي *</label>
+            <input type="text" name="session_title" id="{{ form.session_title.id_for_label }}" class="frm-input" value="{{ form.session_title.value|default:'' }}" placeholder="مثال: اللجنة الطبية العليا لقرارات العلاج الخارجي طارئ">
+            {% if form.session_title.errors %}
+                <ul class="frm-errors">{% for error in form.session_title.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+
+        <div class="frm-row">
+            <div class="frm-group">
+                <label for="{{ form.doctor.id_for_label }}" class="frm-label">المستشار الطبي (رئيس اللجنة الحالي) *</label>
+                <select name="doctor" id="{{ form.doctor.id_for_label }}" class="frm-select">
+                    {% for value, text in form.fields.doctor.choices %}
+                        <option value="{{ value }}" {% if form.doctor.value == value %}selected{% endif %}>{{ text }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.doctor.errors %}
+                    <ul class="frm-errors">{% for error in form.doctor.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+
+            <div class="frm-group">
+                <label for="{{ form.session_date.id_for_label }}" class="frm-label">تاريخ انعقاد وانطلاق أعمال اللجنة *</label>
+                <input type="date" name="session_date" id="{{ form.session_date.id_for_label }}" class="frm-input" value="{% if form.session_date.value %}{{ form.session_date.value|date:'Y-m-d' }}{% endif %}">
+                {% if form.session_date.errors %}
+                    <ul class="frm-errors">{% for error in form.session_date.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+            <button type="button" class="cmp-btn cmp-btn--secondary" onclick="window.history.back();">إلغاء الأمر</button>
+            <button type="submit" class="cmp-btn cmp-btn--primary">اعتماد وتدشين غرفة الانعقاد النشطة</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

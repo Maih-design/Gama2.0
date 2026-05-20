@@ -1,0 +1,188 @@
+@media print {
+    body {
+        background: #ffffff;
+        color: #000000;
+        font-size: 12pt;
+    }
+
+    .cmp-navbar,
+    .cmp-pagination,
+    .frm-search-wrapper,
+    .cmp-btn,
+    .tbl-actions,
+    .cmp-alert-container {
+        display: none !important;
+    }
+
+    .lyt-main-content {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .frm-container,
+    .tbl-wrapper,
+    .dsh-panel {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    .print-document-view {
+        direction: rtl;
+        padding: 2cm;
+    }
+}
+
+/* Premium Healthcare Operations Printing Architecture Specification */
+@media print {
+    /* Clear System Navigation and Control UI Viewport Elements */
+    .lyt-sidebar, 
+    .lyt-navbar, 
+    .cmp-btn, 
+    .frm-container form button,
+    .no-print {
+        display: none !important;
+    }
+
+    /* Core Layout Structural Reset for A4 Hardware Output Boundary Grid */
+    html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 12pt !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        direction: rtl !important;
+        font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    }
+
+    .lyt-app-wrapper, 
+    .lyt-main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    /* Premium Official Medical Document Layout */
+    .prnt-document {
+        padding: 2cm !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        page-break-after: always;
+    }
+
+    /* Official Corporate/Ministry Header Matrix */
+    .prnt-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #047857;
+        padding-bottom: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .prnt-header__emblem {
+        text-align: right;
+        font-size: 1.1rem;
+        font-weight: 800;
+        line-height: 1.5;
+        color: #111827;
+    }
+
+    .prnt-header__meta {
+        text-align: left;
+        font-size: 0.95rem;
+        color: #374151;
+        line-height: 1.6;
+    }
+
+    /* Document Title Accentuation Frame */
+    .prnt-title {
+        text-align: center;
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #047857;
+        margin: 2rem 0;
+        letter-spacing: -0.02em;
+    }
+
+    /* Elegant Grid Form Parameter Mapping Fields */
+    .prnt-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .prnt-field {
+        border-bottom: 1px dashed #9ca3af;
+        padding-bottom: 0.5rem;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .prnt-field__label {
+        font-weight: 700;
+        color: #4b5563;
+        white-space: nowrap;
+    }
+
+    .prnt-field__value {
+        color: #111827;
+        font-weight: 600;
+    }
+
+    /* Narrative Diagnostic & Prescriptive Text Blocks Blocks */
+    .prnt-block {
+        background: #f9fafb !important;
+        border-right: 4px solid #14b8a6 !important;
+        padding: 1.5rem !important;
+        margin-bottom: 2.5rem !important;
+        border-radius: 4px !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .prnt-block__title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #047857;
+        margin-bottom: 0.75rem;
+    }
+
+    .prnt-block__text {
+        font-size: 1.05rem;
+        line-height: 1.8;
+        color: #111827;
+    }
+
+    /* Official Verification Signature Matrix */
+    .prnt-signatures {
+        margin-top: 5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1rem;
+    }
+
+    .prnt-signature-block {
+        text-align: center;
+        width: 200px;
+    }
+
+    .prnt-signature-block__title {
+        font-weight: 700;
+        color: #4b5563;
+        margin-bottom: 4rem;
+    }
+
+    .prnt-signature-block__line {
+        border-top: 1px solid #111827;
+        padding-top: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+}

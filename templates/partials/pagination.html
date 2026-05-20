@@ -1,0 +1,23 @@
+{% if is_paginated %}
+<nav class="cmp-pagination" aria-label="تصفح الصفحات">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="cmp-pagination__btn" aria-label="الصفحة السابقة">&raquo;</a>
+    {% else %}
+        <span class="cmp-pagination__btn cmp-pagination__btn--disabled">&raquo;</span>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="cmp-pagination__btn cmp-pagination__btn--active">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="cmp-pagination__btn">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="cmp-pagination__btn" aria-label="الصفحة التالية">&laquo;</a>
+    {% else %}
+        <span class="cmp-pagination__btn cmp-pagination__btn--disabled">&laquo;</span>
+    {% endif %}
+</nav>
+{% endif %}
