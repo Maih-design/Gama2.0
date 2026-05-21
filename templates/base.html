@@ -1,12 +1,22 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}نظام إدارة اللجان الطبية{% endblock %}</title>
-    
-    <!-- Unified CSS Architecture Design System -->
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+            نظام إدارة اللجان الطبية
+        {% endblock %}
+    </title>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'css/components.css' %}">
@@ -15,29 +25,40 @@
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'css/animations.css' %}">
     <link rel="stylesheet" href="{% static 'css/print.css' %}">
-    {% block extra_css %}{% endblock %}
+
+    {% block extra_css %}
+    {% endblock %}
+
 </head>
+
 <body>
 
-    <div class="lyt-app-wrapper">
-        <!-- Global Header Component / Partial Structure Navigation -->
+    {% if request.user.is_authenticated %}
         {% include 'partials/navbar.html' %}
+    {% endif %}
 
-        <!-- Realtime System Notifications Orchestration -->
+    <div class="lyt-app-wrapper">
+
         {% include 'partials/alerts.html' %}
 
-        <!-- Application Central Context Boundary viewport -->
         <main class="lyt-main-content">
-            {% block content %}{% endblock %}
+
+            {% block content %}
+            {% endblock %}
+
         </main>
+
     </div>
 
-    <!-- UI Execution Mechanics Script Layers Injection Pipeline -->
+    <!-- JS -->
     <script src="{% static 'js/navbar.js' %}"></script>
     <script src="{% static 'js/dropdowns.js' %}"></script>
     <script src="{% static 'js/alerts.js' %}"></script>
     <script src="{% static 'js/animations.js' %}"></script>
     <script src="{% static 'js/print.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+
+    {% block extra_js %}
+    {% endblock %}
+
 </body>
 </html>

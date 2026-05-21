@@ -25,6 +25,7 @@ urlpatterns = [
     path('patients/', include('apps.patients.urls', namespace='patients')),
     path('committee/', include('apps.committee.urls', namespace='committee')),
     path('referrals/', include('apps.referrals.urls', namespace='referrals')),
+    path("accounts/", include("apps.accounts.urls")),
 ]
 
 if settings.DEBUG:

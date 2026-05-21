@@ -91,7 +91,8 @@
         {% include 'partials/pagination.html' %}
     {% else %}
         {% if not active_session %}
-            {% include 'partials/empty_state.html' with title="لا يوجد جلسات لجان مسجلة" text="ابدأ بإنشاء أول جلسة وتشكيل أعضاء اللجنة الطبية فوراً لتهيئة بيئة إدراج حالات المرضى." action_url="/committee/create/" action_text="تشكيل لجنة انعقاد الآن" %}
+            {% url 'committee:session_create' as create_session_url %}
+            {% include 'partials/empty_state.html' with title="لا يوجد جلسات لجان مسجلة" text="ابدأ بإنشاء أول جلسة وتشكيل أعضاء اللجنة الطبية فوراً لتهيئة بيئة إدراج حالات المرضى." action_url=create_session_url action_text="تشكيل لجنة انعقاد الآن" %}    
         {% endif %}
     {% endif %}
 </div>

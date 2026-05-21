@@ -9,7 +9,8 @@ from apps.patients.models import Patient
 from apps.committee.models import CommitteeSession, CommitteeCase
 from apps.referrals.models import Referral
 
-#@login_required
+
+@login_required
 def homepage(request):
     """
     Main premium operational control dashboard gateway.
@@ -28,6 +29,7 @@ def homepage(request):
     return render(request, 'core/homepage.html', context)
 
 
+@login_required
 def patient_search_api(request):
     """
     High-performance AJAX endpoint for real-time patient search pipeline 

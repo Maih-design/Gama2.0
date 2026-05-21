@@ -10,8 +10,10 @@ from apps.core.constants import CaseStatus, ReferralStatus
 from apps.committee.models import CommitteeCase
 from .models import Referral, ReferralCenter
 from .forms import ReferralForm, CancelReferralForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class PendingReferralsListView(ListView):
+class PendingReferralsListView(LoginRequiredMixin, ListView):
     model = Referral
     template_name = 'referrals/pending_referrals.html'
     context_object_name = 'referrals'
@@ -23,7 +25,7 @@ class PendingReferralsListView(ListView):
         ).order_by('-issued_at')
 
 
-class IssuedReferralsListView(ListView):
+class IssuedReferralsListView(LoginRequiredMixin, ListView):
     model = Referral
     template_name = 'referrals/issued_referrals.html'
     context_object_name = 'referrals'
@@ -35,6 +37,7 @@ class IssuedReferralsListView(ListView):
         ).select_related('committee_case__patient', 'referral_center').order_by('-issued_at')
 
 
+@login_required
 def create_referral(request, case_id):
     case = get_object_or_404(
         CommitteeCase.objects.select_related('patient', 'recommendation__procedure'), 
@@ -68,6 +71,7 @@ def create_referral(request, case_id):
     })
 
 
+@login_required
 def print_referral(request, referral_id):
     referral = get_object_or_404(
         Referral.objects.select_related('committee_case__patient', 'committee_case__recommendation__procedure', 'referral_center'),
@@ -86,6 +90,7 @@ def print_referral(request, referral_id):
     return render(request, 'referrals/referral_print.html', {'referral': referral})
 
 
+@login_required
 def cancel_referral(request, referral_id):
     referral = get_object_or_404(Referral, pk=referral_id)
     
@@ -106,7 +111,7 @@ def cancel_referral(request, referral_id):
         'referral': referral
     })
 
-
+@login_required
 def reissue_referral(request, referral_id):
     old_referral = get_object_or_404(Referral, pk=referral_id)
     

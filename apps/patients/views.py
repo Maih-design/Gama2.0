@@ -6,8 +6,9 @@ from django.utils.translation import gettext_lazy as _
 from .models import Patient, PatientDocument
 from .forms import PatientForm, PatientDocumentForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class PatientListView(ListView):
+class PatientListView(LoginRequiredMixin, ListView):
     model = Patient
     template_name = 'patients/patient_list.html'
     context_object_name = 'patients'
@@ -17,7 +18,7 @@ class PatientListView(ListView):
         return Patient.objects.all().order_by('-created_at')
 
 
-class PatientCreateView(CreateView):
+class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
     form_class = PatientForm
     template_name = 'patients/patient_form.html'
@@ -27,7 +28,7 @@ class PatientCreateView(CreateView):
         return reverse('patients:patient_profile', kwargs={'pk': self.object.pk})
 
 
-class PatientProfileView(DetailView):
+class PatientProfileView(LoginRequiredMixin, DetailView):
     model = Patient
     template_name = 'patients/patient_profile.html'
     context_object_name = 'patient'
@@ -41,7 +42,7 @@ class PatientProfileView(DetailView):
         return context
 
 
-class PatientUpdateView(UpdateView):
+class PatientUpdateView(LoginRequiredMixin, UpdateView):
     model = Patient
     form_class = PatientForm
     template_name = 'patients/patient_form.html'
@@ -51,6 +52,7 @@ class PatientUpdateView(UpdateView):
         return reverse('patients:patient_profile', kwargs={'pk': self.object.pk})
 
 
+@login_required
 def upload_patient_document(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
     if request.method == 'POST':
@@ -64,7 +66,7 @@ def upload_patient_document(request, pk):
             messages.error(request, _("فشل في رفع المستند. يرجى التحقق من الحقول."))
     return redirect('patients:patient_profile', pk=patient.pk)
 
-#@login_required
+@login_required
 def documents_checklist_print(request, patient_pk):
     """
     Premium print template view generating the official checklist of required 

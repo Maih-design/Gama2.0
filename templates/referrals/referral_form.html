@@ -31,7 +31,7 @@
         {% endif %}
 
         <div class="frm-group">
-            <label for="{{ form.referral_center.id_for_label }}" class="frm-label">المستشفى أو المركز الطبي الخارجي المستهدف بالتوجيه والتحويل *</label>
+            <label for="{{ form.referral_center.id_for_label }}" class="frm-label">الجهة المحول اليها*</label>
             <select name="referral_center" id="{{ form.referral_center.id_for_label }}" class="frm-select" style="font-weight: 700; color: var(--primary);">
                 {% for value, text in form.fields.referral_center.choices %}
                     <option value="{{ value }}" {% if form.referral_center.value == value %}selected{% endif %}>{{ text }}</option>

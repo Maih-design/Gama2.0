@@ -7,8 +7,11 @@ from django.utils.translation import gettext_lazy as _
 from apps.core.constants import SessionStatus, CaseStatus, ReferralStatus
 from .models import CommitteeSession, CommitteeCase, CommitteeRecommendation, Patient
 from .forms import CommitteeSessionForm, CommitteeCaseForm, CommitteeRecommendationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class CommitteeSessionListView(ListView):
+
+class CommitteeSessionListView(LoginRequiredMixin, ListView):
     model = CommitteeSession
     template_name = 'committee/sessions_list.html'
     context_object_name = 'sessions'
@@ -18,7 +21,7 @@ class CommitteeSessionListView(ListView):
         return CommitteeSession.objects.select_related('doctor').order_by('-session_date')
 
 
-class CommitteeSessionCreateView(CreateView):
+class CommitteeSessionCreateView(LoginRequiredMixin, CreateView):
     model = CommitteeSession
     form_class = CommitteeSessionForm
     template_name = 'committee/create_session.html'
@@ -33,7 +36,7 @@ class CommitteeSessionCreateView(CreateView):
         return reverse('committee:session_add_cases', kwargs={'pk': self.object.pk})
 
 
-class CommitteeSessionDetailView(DetailView):
+class CommitteeSessionDetailView(LoginRequiredMixin, DetailView):
     model = CommitteeSession
     template_name = 'committee/session_details.html'
     context_object_name = 'session_obj'
@@ -45,6 +48,7 @@ class CommitteeSessionDetailView(DetailView):
         )
 
 
+@login_required
 def session_add_cases(request, pk):
     session_obj = get_object_or_404(CommitteeSession, pk=pk)
     
@@ -75,7 +79,7 @@ def session_add_cases(request, pk):
     })
 
 
-class PendingCasesListView(ListView):
+class PendingCasesListView(LoginRequiredMixin, ListView):
     model = CommitteeCase
     template_name = 'committee/pending_cases.html'
     context_object_name = 'cases'
@@ -87,6 +91,7 @@ class PendingCasesListView(ListView):
         ).select_related('patient', 'committee_session__doctor').order_by('created_at')
 
 
+@login_required
 def add_recommendation(request, case_id):
     case = get_object_or_404(
         CommitteeCase.objects.select_related('patient', 'committee_session'), 
@@ -126,6 +131,7 @@ def add_recommendation(request, case_id):
     })
 
 
+@login_required
 def print_recommendation(request, rec_id):
     recommendation = get_object_or_404(
         CommitteeRecommendation.objects.select_related('committee_case__patient', 'procedure', 'committee_case__committee_session__doctor'),
@@ -134,6 +140,7 @@ def print_recommendation(request, rec_id):
     return render(request, 'print/recommendation_print.html', {'recommendation': recommendation})
 
 
+@login_required
 def _evaluate_and_close_session(session_obj):
     """
     Internal business engine workflow automation validation rules.

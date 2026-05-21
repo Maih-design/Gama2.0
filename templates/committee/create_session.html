@@ -24,14 +24,6 @@
             </div>
         {% endif %}
 
-        <div class="frm-group">
-            <label for="{{ form.session_title.id_for_label }}" class="frm-label">مسمى وعنوان اللجنة الطبية الحالي *</label>
-            <input type="text" name="session_title" id="{{ form.session_title.id_for_label }}" class="frm-input" value="{{ form.session_title.value|default:'' }}" placeholder="مثال: اللجنة الطبية العليا لقرارات العلاج الخارجي طارئ">
-            {% if form.session_title.errors %}
-                <ul class="frm-errors">{% for error in form.session_title.errors %}<li>{{ error }}</li>{% endfor %}</ul>
-            {% endif %}
-        </div>
-
         <div class="frm-row">
             <div class="frm-group">
                 <label for="{{ form.doctor.id_for_label }}" class="frm-label">المستشار الطبي (رئيس اللجنة الحالي) *</label>
