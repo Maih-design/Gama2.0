@@ -3,14 +3,14 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from apps.core.constants import SessionStatus
 from .models import CommitteeSession, CommitteeCase, CommitteeRecommendation, Doctor
+from django.utils import timezone
 
 class CommitteeSessionForm(forms.ModelForm):
     class Meta:
         model = CommitteeSession
-        fields = ['session_date', 'doctor', 'status', 'notes']
+        fields = ['session_date', 'doctor']
         widgets = {
-            'session_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'notes': forms.Textarea(attrs={'rows': 3}),
+            'session_date': forms.DateInput(attrs={'type': 'date', 'class': 'frm-input'}),
         }
 
     def clean_status(self):

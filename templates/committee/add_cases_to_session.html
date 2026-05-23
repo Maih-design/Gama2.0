@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}إدراج المرضى للجلسة الطبية #{{ session.pk }}{% endblock %}
+{% block title %}إدراج المرضى للجلسة الطبية #{{ session_obj.pk }}{% endblock %}
 
 {% block content %}
 <div class="cmp-page-header">
@@ -10,7 +10,7 @@
         <p class="cmp-page-header__subtitle">ابحث عن ملفات المرضى المسجلين بالنظام لإدراجهم مباشرة أو قم بإنشاء ملف مريض فوري موازي.</p>
     </div>
     <div>
-        <a href="{% url 'committee:session_detail' session.pk %}" class="cmp-btn cmp-btn--secondary">إنهاء العودة للجلسة</a>
+        <a href="{% url 'committee:session_detail' session_obj.pk %}" class="cmp-btn cmp-btn--secondary">إنهاء العودة للجلسة</a>
     </div>
 </div>
 
@@ -38,7 +38,7 @@
         
         <form id="inlineQuickPatientForm" method="post" action="{% url 'patients:patient_create' %}" novalidate>
             {% csrf_token %}
-            <input type="hidden" name="inline_redirect_session" value="{{ session.pk }}">
+            <input type="hidden" name="inline_redirect_session" value="{{ session_obj.pk }}">
             
             <div class="frm-group">
                 <label class="frm-label">الرقم القومي (14 رقم) *</label>
@@ -80,7 +80,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('.cmp-search-bar__input');
     const resultsContainer = document.getElementById('committeeSearchPatientTargetResults');
-    const sessionId = "{{ session.pk }}";
+    const sessionId = "{{ session_obj.pk }}";
 
     if (searchInput && resultsContainer) {
         searchInput.addEventListener('input', debounce((e) => {

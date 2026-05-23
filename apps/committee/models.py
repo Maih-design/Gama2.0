@@ -18,7 +18,14 @@ class Doctor(models.Model):
 
 
 class Procedure(models.Model):
-    category = models.CharField(max_length=150, verbose_name=_("تصنيف الإجراء الطبي"))
+    CATEGORY_CHOICES = [('diagnostic', _("فحوصات")), ('therapeutic', _("اجراء علاجي"))]
+
+    category = models.CharField(
+        max_length=50,
+        choices=CATEGORY_CHOICES,
+        default='اجراء علاجي',
+        verbose_name=_("تصنيف الإجراء الطبي")
+    )
     name = models.CharField(max_length=255, unique=True, verbose_name=_("اسم الإجراء"))
     requires_referral = models.BooleanField(default=False, verbose_name=_("يتطلب تحويل لمركز خارجي"))
 

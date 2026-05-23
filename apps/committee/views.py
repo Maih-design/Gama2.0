@@ -12,13 +12,33 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class CommitteeSessionListView(LoginRequiredMixin, ListView):
+
     model = CommitteeSession
     template_name = 'committee/sessions_list.html'
     context_object_name = 'sessions'
-    paginate_by = 20
 
     def get_queryset(self):
-        return CommitteeSession.objects.select_related('doctor').order_by('-session_date')
+        return CommitteeSession.objects.select_related(
+            'doctor'
+        ).order_by('-session_date')
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        # الجلسة المفتوحة الحالية
+        active_session = CommitteeSession.objects.filter(
+            status=SessionStatus.ACTIVE
+        ).first()
+
+        context['active_session'] = active_session
+
+        # باقي الجلسات
+        context['previous_sessions'] = CommitteeSession.objects.exclude(
+            id=active_session.id if active_session else None
+        ).order_by('-session_date')
+
+        return context
 
 
 class CommitteeSessionCreateView(LoginRequiredMixin, CreateView):
@@ -27,7 +47,7 @@ class CommitteeSessionCreateView(LoginRequiredMixin, CreateView):
     template_name = 'committee/create_session.html'
 
     def form_valid(self, form):
-        form.instance.status = SessionStatus.SCHEDULED
+        form.instance.status = SessionStatus.ACTIVE
         response = super().form_valid(form)
         messages.success(self.request, _("تم إنشاء الجلسة بنجاح كجلسة معلقة."))
         return response

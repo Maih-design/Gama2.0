@@ -9,7 +9,7 @@ urlpatterns = [
     path('sessions/', CommitteeSessionListView.as_view(), name='sessions_list'),
     path('session/create/', CommitteeSessionCreateView.as_view(), name='session_create'),
     path('session/<int:pk>/', CommitteeSessionDetailView.as_view(), name='session_detail'),
-    path('session/<int:pk>/add-cases/', views.session_add_cases, name='add_cases_to_session'),
+    path('session/<int:pk>/add-cases/', views.session_add_cases, name='session_add_cases'),
     #path('session/<int:pk>/attach-case/', views.attach_case_to_session, name='attach_case_to_session'),
     
     # Medical Consultation Pipeline
