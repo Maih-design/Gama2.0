@@ -72,7 +72,13 @@
                             <td>{{ session.doctor.doctor_name }}</td>
                             <td>{{ session.session_date|date:"Y-m-d" }}</td>
                             <td style="font-weight: 700; text-align: center;">{{ session.cases.count }}</td>
-                            <td><span class="cmp-badge cmp-badge--warning">مغلقة ومؤرشفة</span></td>
+                            <td>
+                                {% if session.is_active %}
+                                    <span class="cmp-badge cmp-badge--success">نشطة حالياً</span>
+                                {% else %}
+                                    <span class="cmp-badge cmp-badge--warning">مغلقة ومؤرشفة</span>
+                                {% endif %}
+                            </td>
                             <td class="tbl-actions">
                                 <a href="{% url 'committee:session_detail' session.pk %}" class="cmp-btn cmp-btn--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">استعراض المخرجات</a>
                             </td>

@@ -68,7 +68,7 @@
                                 <em style="font-size: 0.9rem; color: var(--text); font-weight: 500;">{{ case.recommendation|default:"بانتظار المداولة الطبية والفحص..." }}</em>
                             </td>
                             <td class="tbl-actions">
-                                {% if session.is_active %}
+                                {% if session.status == 'ACT' %}
                                     <a href="{% url 'committee:recommendation_form' case.pk %}" class="cmp-btn cmp-btn--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: var(--secondary); color: var(--secondary);">
                                         إقرار التوصية الطبية
                                     </a>
@@ -87,7 +87,7 @@
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1rem; color: var(--border-focus);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem;">جدول أعمال اللجنة فارغ</h4>
             <p style="font-size: 0.95rem; margin-bottom: 1.5rem;">لم يتم ربط أو إدراج أي مريض بجلسة الانعقاد الحالية الطبية بعد.</p>
-            {% if session.is_active %}
+            {% if session.status == 'ACT' %}
                 <a href="{% url 'committee:add_cases_to_session' session.pk %}" class="cmp-btn cmp-btn--primary" style="display: inline-flex;">بدء ربط وإدراج ملفات المرضى للجلسة الآن</a>
             {% endif %}
         </div>

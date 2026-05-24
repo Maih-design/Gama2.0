@@ -32,9 +32,27 @@
 
             <select name="branch" class="frm-select" style="max-width: 200px;" onchange="this.form.submit()">
                 <option value="">الفرع التابع (الكل)</option>
-                <option value="HQ" {% if request.GET.branch == 'HQ' %}selected{% endif %}>الفرع الرئيسي</option>
-                <option value="NTH" {% if request.GET.branch == 'NTH' %}selected{% endif %}>فرع الوجه البحري</option>
-                <option value="STH" {% if request.GET.branch == 'STH' %}selected{% endif %}>فرع الوجه القبلي</option>
+                <option value="AST" {% if request.GET.branch == 'AST' %}selected{% endif %}>فرع اسيوط</option>
+                <option value="BHR" {% if request.GET.branch == 'BHR' %}selected{% endif %}>فرع البحيرة</option>
+                <option value="GIZ" {% if request.GET.branch == 'GIZ' %}selected{% endif %}>فرع الجيزة</option>
+                <option value="DKH" {% if request.GET.branch == 'DKH' %}selected{% endif %}>فرع الدقهلية</option>
+                <option value="SHR" {% if request.GET.branch == 'SHR' %}selected{% endif %}>فرع الشرقية</option>
+                <option value="GHB" {% if request.GET.branch == 'GHB' %}selected{% endif %}>فرع الغربية</option>
+                <option value="FYM" {% if request.GET.branch == 'FYM' %}selected{% endif %}>فرع الفيوم</option>
+                <option value="CAI" {% if request.GET.branch == 'CAI' %}selected{% endif %}>فرع القاهرة</option>
+                <option value="QLY" {% if request.GET.branch == 'QLY' %}selected{% endif %}>فرع القليوبية</option>
+                <option value="MNF" {% if request.GET.branch == 'MNF' %}selected{% endif %}>فرع المنوفية</option>
+                <option value="MNY" {% if request.GET.branch == 'MNY' %}selected{% endif %}>فرع المنيا</option>
+                <option value="BNS" {% if request.GET.branch == 'BNS' %}selected{% endif %}>فرع بنى سويف</option>
+                <option value="DMT" {% if request.GET.branch == 'DMT' %}selected{% endif %}>فرع دمياط</option>
+                <option value="SHG" {% if request.GET.branch == 'SHG' %}selected{% endif %}>فرع سوهاج</option>
+                <option value="NSN" {% if request.GET.branch == 'NSN' %}selected{% endif %}>فرع شمال سيناء</option>
+                <option value="NWD" {% if request.GET.branch == 'NWD' %}selected{% endif %}>فرع شمال غرب الدلتا</option>
+                <option value="QNA" {% if request.GET.branch == 'QNA' %}selected{% endif %}>فرع قنا</option>
+                <option value="KSH" {% if request.GET.branch == 'KSH' %}selected{% endif %}>فرع كفر الشيخ</option>
+                <option value="RDS" {% if request.GET.branch == 'RDS' %}selected{% endif %}>منطقة البحر الاحمر</option>
+                <option value="NWV" {% if request.GET.branch == 'NWV' %}selected{% endif %}>منطقة الوادى الجديد</option>
+                <option value="MTR" {% if request.GET.branch == 'MTR' %}selected{% endif %}>منطقة مطروح</option>
             </select>
         </div>
         

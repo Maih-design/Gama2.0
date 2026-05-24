@@ -77,8 +77,11 @@
 
 {% block extra_js %}
 <script>
+    const patientSearchUrl = "{% url 'core:patient_search_api' %}";
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.querySelector('.cmp-search-bar__input');
+    const searchInput = document.querySelector('.frm-search-input');
     const resultsContainer = document.getElementById('committeeSearchPatientTargetResults');
     const sessionId = "{{ session_obj.pk }}";
 
@@ -92,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             resultsContainer.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--primary); font-weight: 600;">جاري استعلام السجلات وفحص قاعدة البيانات...</div>`;
 
-            fetch(`/api/patients/search/?q=${encodeURIComponent(query)}`)
+            fetch(`${patientSearchUrl}?q=${encodeURIComponent(query)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.length === 0) {
@@ -109,15 +112,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         card.innerHTML = `
                             <div>
-                                <div style="font-weight:700; color:var(--text); margin-bottom:0.25rem;">${patient.full_name}</div>
-                                <div style="font-family:monospace; font-size:0.85rem; color:var(--text-muted); font-weight:600;">الرقم القومي: ${patient.national_id}</div>
+                                <div style="font-weight:700; color:var(--text); margin-bottom:0.25rem;">
+                                    ${patient.full_name}
+                                </div>
+
+                                <div style="font-family:monospace; font-size:0.85rem; color:var(--text-muted); font-weight:600;">
+                                    الرقم القومي: ${patient.national_id}
+                                </div>
                             </div>
-                            <form method="post" action="/committee/session/${sessionId}/attach-case/">
+
+                            <form method="POST" action="/committee/session/${sessionId}/add-cases/">
                                 <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie('csrftoken')}">
-                                <input type="hidden" name="patient_id" value="${patient.id}">
-                                <button type="submit" class="cmp-btn cmp-btn--secondary" style="padding:0.5rem 1rem; font-size:0.85rem;">إدراج المريض للجنة</button>
+                                <input type="hidden" name="selected_patients" value="${patient.id}">
+
+                                <button type="submit"
+                                        class="cmp-btn cmp-btn--secondary"
+                                        style="padding:0.5rem 1rem; font-size:0.85rem;">
+                                    إدراج المريض للجنة
+                                </button>
                             </form>
-                        `;
+                            `;
                         resultsContainer.appendChild(card);
                     });
                 });

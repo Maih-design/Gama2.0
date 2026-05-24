@@ -7,6 +7,8 @@ from .models import Patient, PatientDocument
 from .forms import PatientForm, PatientDocumentForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from django.db.models import Q
 
 class PatientListView(LoginRequiredMixin, ListView):
     model = Patient
@@ -15,8 +17,25 @@ class PatientListView(LoginRequiredMixin, ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        return Patient.objects.all().order_by('-created_at')
+        queryset = Patient.objects.all().order_by('-created_at')
 
+        q = self.request.GET.get('q', '').strip()
+        gender = self.request.GET.get('gender', '').strip()
+        branch = self.request.GET.get('branch', '').strip()
+
+        if q:
+            queryset = queryset.filter(
+                Q(full_name__icontains=q) |
+                Q(national_id__icontains=q)
+            )
+
+        if gender:
+            queryset = queryset.filter(gender=gender)
+
+        if branch:
+            queryset = queryset.filter(affiliated_branch=branch)
+
+        return queryset
 
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient

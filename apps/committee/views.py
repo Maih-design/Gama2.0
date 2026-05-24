@@ -9,6 +9,7 @@ from .models import CommitteeSession, CommitteeCase, CommitteeRecommendation, Pa
 from .forms import CommitteeSessionForm, CommitteeCaseForm, CommitteeRecommendationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 
 class CommitteeSessionListView(LoginRequiredMixin, ListView):
@@ -34,9 +35,12 @@ class CommitteeSessionListView(LoginRequiredMixin, ListView):
         context['active_session'] = active_session
 
         # باقي الجلسات
-        context['previous_sessions'] = CommitteeSession.objects.exclude(
-            id=active_session.id if active_session else None
-        ).order_by('-session_date')
+        previous_sessions = CommitteeSession.objects.all()
+
+        if active_session:
+            previous_sessions = previous_sessions.exclude(id=active_session.id)
+
+        context['previous_sessions'] = previous_sessions.order_by('-session_date')
 
         return context
 
@@ -59,7 +63,7 @@ class CommitteeSessionCreateView(LoginRequiredMixin, CreateView):
 class CommitteeSessionDetailView(LoginRequiredMixin, DetailView):
     model = CommitteeSession
     template_name = 'committee/session_details.html'
-    context_object_name = 'session_obj'
+    context_object_name = 'session'
 
     def get_queryset(self):
         return CommitteeSession.objects.select_related('doctor').prefetch_related(
@@ -160,7 +164,6 @@ def print_recommendation(request, rec_id):
     return render(request, 'print/recommendation_print.html', {'recommendation': recommendation})
 
 
-@login_required
 def _evaluate_and_close_session(session_obj):
     """
     Internal business engine workflow automation validation rules.
