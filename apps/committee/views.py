@@ -116,10 +116,9 @@ class PendingCasesListView(LoginRequiredMixin, ListView):
 
 
 @login_required
-def add_recommendation(request, case_id):
+def add_recommendation(request, pk):
     case = get_object_or_404(
         CommitteeCase.objects.select_related('patient', 'committee_session'), 
-        pk=case_id
     )
     
     # Logic Hook: Try grabbing an existing recommendation for an update form loop
@@ -143,7 +142,7 @@ def add_recommendation(request, case_id):
             messages.success(request, _("تم حفظ التوصية والقرار الطبي بنجاح."))
             
             if rec.procedure.requires_referral:
-                return redirect('referrals:create_referral', case_id=case.id)
+                return redirect('referrals:create_referral', case_pk=case.id)
             else:
                 return redirect('committee:print_recommendation', rec_id=rec.id)
     else:
@@ -173,5 +172,5 @@ def _evaluate_and_close_session(session_obj):
     resolved_cases = session_obj.cases.filter(status__in=[CaseStatus.APPROVED, CaseStatus.REJECTED]).count()
     
     if total_cases > 0 and total_cases == resolved_cases:
-        session_obj.status = SessionStatus.COMPLETED
+        session_obj.status = SessionStatus.CLOSED
         session_obj.save()

@@ -9,7 +9,7 @@ urlpatterns = [
     path('issued/', IssuedReferralsListView.as_view(), name='issued_referrals'),
     
     # Referral Issuance Infrastructure Forms
-    path('case/<int:case_pk>/create/', views.create_referral, name='create_referral_from_case'),
+    path('case/<int:case_pk>/create/', views.create_referral, name='create_referral'),
     path('case/<int:case_pk>/assign/', views.create_referral, name='assign_center_and_create'),
     
     # Active Referral Operations Lifecycle Controls
@@ -18,5 +18,5 @@ urlpatterns = [
     path('<int:pk>/reissue/', views.reissue_referral, name='reissue_referral'),
     
     # Printing Actions Routing Matrix (Consolidated)
-    path('<int:pk>/print/', views.print_referral, name='print_referral'),
+    path('<int:referral_id>/print/', views.print_referral, name='print_referral'),
 ]

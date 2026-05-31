@@ -122,4 +122,3 @@ class CommitteeRecommendation(models.Model):
 
     def __str__(self):
         return f"قرار وتوصية لحالة المريض: {self.committee_case.patient.full_name}"
-# Create your models here.

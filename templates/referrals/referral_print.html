@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+{% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>خطاب تحويل طبي رسمي موحد - #RF-{{ referral.pk }}</title>
+    <title>خطاب تحويل من اللجنة العليا للجاما نايف - #RF-{{ referral.pk }}</title>
     <link rel="stylesheet" href="{% static 'css/design_system.css' %}">
     <link rel="stylesheet" href="{% static 'css/print.css' %}">
 </head>
@@ -10,7 +11,7 @@
 
     <div class="no-print" style="background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm);">
         <div>
-            <span style="font-weight: 700; color: var(--text);">شاشة معاينة وثيقة الخطاب الطبي الرسمي المطبوع الموجه للخارج</span>
+            <span style="font-weight: 700; color: var(--text);">شاشة مراجعة الخطاب الطبي المطبوع</span>
             <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">اضغط على زر الطباعة أدناه لتشغيل معالج الطباعة بالجهاز الملحق مباشرة.</div>
         </div>
         <div style="display: flex; gap: 0.75rem;">
@@ -19,78 +20,100 @@
         </div>
     </div>
 
-    <main class="prnt-document">
-        
-        <header class="prnt-header">
-            <div class="prnt-header__emblem">
-                <div>المنظومة الطبية الموحدة لإدارة اللجان</div>
-                <div>إدارة شؤون التحويلات والعلاج الخارجي</div>
-                <div>الفرع التابع: {{ referral.committee_case.patient.get_affiliated_branch_display|default:"الفرع الرئيسي العام" }}</div>
-            </div>
-            <div class="prnt-header__meta">
-                <div><strong>رقم القيد الصادر:</strong> RF-{{ referral.pk }}</div>
-                <div><strong>تاريخ الإصدار المعتمد:</strong> {{ referral.issued_at|date:"Y-m-d" }}</div>
-                <div><strong>توقيت التسجيل بالنظام:</strong> {{ referral.issued_at|date:"H:i" }}</div>
-            </div>
-        </header>
+    <div class="prnt-page-border">
+        <main class="prnt-document">
+            
+            <header class="prnt-header">
+                <div class="prnt-header__right">
+                    <div>منظومة إدارة اللجنة العليا للجاما نايف</div>
+                    <div>الإدارة العامة للخدمات الطبية</div>
+                </div>
+                
+                <div class="prnt-header__logo">
+                    <img src="{% static 'images/logo.png' %}" alt="System Logo">
+                </div>
+                
+                <div class="prnt-header__left">
+                    <div><strong>رقم الخطاب:</strong> RF-{{ referral.pk }}</div>
+                    <div><strong>تاريخ الطباعة:</strong> {{ referral.issued_at|date:"Y-m-d" }}</div>
+                    <div><strong>وقت الطباعة:</strong> {{ referral.issued_at|date:"H:i" }}</div>
+                </div>
+            </header>
 
-        <h1 class="prnt-title">خطاب توجيه وتحويل طبي رسمي موجه ومكتوم</h1>
+            <h1 class="prnt-title">خطاب تحويل طبي</h1>
 
-        <div style="font-size: 1.15rem; font-weight: 800; color: #111827; margin-bottom: 2rem;">
-            السيد الأستاذ الدكتور / مدير عام مستشفى ( <span style="color: #047857;">{{ referral.referral_center.name }}</span> ) المحترم،،
-            <br><span style="font-size: 1rem; font-weight: 500; color: #4b5563; display: block; margin-top: 0.5rem;">تحية طيبة وبعد، بناءً على قرار اللجنة الطبية العليا وتوصيات المستشارين المعتمدين، نحيل لسيادتكم طيه المريض المذكورة بياناته أدناه لتلقي الرعاية والفحوصات المقررة ببنود التوصية المرفقة:</span>
-        </div>
+            <div class="prnt-direction-text">
+                السيد الدكتور / مدير مستشفى ( <span style="color: #047857;">{{ referral.referral_center.name }}</span> ) ،،
+            </div>
 
-        <section class="prnt-grid">
-            <div class="prnt-field">
-                <span class="prnt-field__label">اسم المريض رباعي:</span>
-                <span class="prnt-field__value">{{ referral.committee_case.patient.full_name }}</span>
-            </div>
-            <div class="prnt-field">
-                <span class="prnt-field__label">الرقم القومي للمريض:</span>
-                <span class="prnt-field__value" style="font-family: monospace; letter-spacing: 0.05em;">{{ referral.committee_case.patient.national_id }}</span>
-            </div>
-            <div class="prnt-field">
-                <span class="prnt-field__label">تاريخ الميلاد والسن:</span>
-                <span class="prnt-field__value">{{ referral.committee_case.patient.birth_date|date:"Y-m-d" }}</span>
-            </div>
-            <div class="prnt-field">
-                <span class="prnt-field__label">المحافظة السكنية المسجلة:</span>
-                <span class="prnt-field__value">{{ referral.committee_case.patient.get_governorate_display }}</span>
-            </div>
-        </section>
-
-        <section class="prnt-block">
-            <h3 class="prnt-block__title">التشخيص الطبي المعتمد والقرار الصادر من اللجنة الطبية المشكلة:</h3>
-            <div class="prnt-block__text">
-                {{ referral.committee_case.recommendation }}
-            </div>
-        </section>
-
-        {% if referral.additional_notes %}
-            <section class="prnt-block" style="border-right-color: #9ca3af !important;">
-                <h3 class="prnt-block__title">توجيهات، اشتراطات، وملاحظات إدارية ملحقة بالوثيقة:</h3>
-                <div class="prnt-block__text">
-                    {{ referral.additional_notes }}
+            <section class="prnt-grid">
+                <div class="prnt-field">
+                    <span class="prnt-field__label">اسم المريض:</span>
+                    <span class="prnt-field__value">{{ referral.committee_case.patient.full_name }}</span>
+                </div>
+                <div class="prnt-field">
+                    <span class="prnt-field__label">الرقم القومي:</span>
+                    <span class="prnt-field__value" style="font-family: monospace; letter-spacing: 0.05em;">{{ referral.committee_case.patient.national_id }}</span>
+                </div>
+                <div class="prnt-field">
+                    <span class="prnt-field__label">تاريخ الميلاد:</span>
+                    <span class="prnt-field__value">{{ referral.committee_case.patient.birth_date|date:"Y-m-d" }}</span>
+                </div>
+                <div class="prnt-field">
+                    <span class="prnt-field__label">الفرع التابع:</span> 
+                    <span class="prnt-field__value">{{ referral.committee_case.patient.get_affiliated_branch_display|default:"الفرع الرئيسي العام" }}</span>
+                </div>
+                <div class="prnt-field">
+                    <span class="prnt-field__label">محل الاقامة:</span>
+                    <span class="prnt-field__value">{{ referral.committee_case.patient.get_governorate_display }}</span>
                 </div>
             </section>
-        {% endif %}
 
-        <div style="font-size: 1rem; font-weight: 600; text-align: center; margin: 3rem 0; color: #374151;">
-            وتفضلوا بقبول وافر الاحترام والتقدير والامتنان الشديد لشخصكم الكريم،،
-        </div>
+            <section class="prnt-block">
+                <h3 class="prnt-block__title">التشخيص الطبي النهائي:</h3>
+                <div class="prnt-block__text">
+                    {{ referral.committee_case.patient.diagnosis }}
+                </div>
+            </section>
 
-        <footer class="prnt-signatures">
-            <div class="prnt-signature-block">
-                <div class="prnt-signature-block__title">مسؤول شؤون التحويلات</div>
-                <div class="prnt-signature-block__line">توقيع الموظف المختص</div>
+            <section class="prnt-procedure-box">
+                <h3 class="prnt-procedure-box__title">الإجراء الطبي المطلوب المعتمد:</h3>
+                <div class="prnt-procedure-box__value">
+                    {{ referral.committee_case.recommendation.procedure.name }}
+                </div>
+            </section>
+
+            {% if referral.additional_notes %}
+                <section class="prnt-block note-block">
+                    <h3 class="prnt-block__title">توجيهات، اشتراطات، وملاحظات إدارية ملحقة بالوثيقة:</h3>
+                    <div class="prnt-block__text">
+                        {{ referral.additional_notes }}
+                    </div>
+                </section>
+            {% endif %}
+
+            <div class="prnt-closing">
+                وتفضلوا بقبول وافر الاحترام والتقدير ،،
             </div>
-            <div class="prnt-signature-block">
-                <div class="prnt-signature-block__title">المستشار الطبي / رئيس اللجنة</div>
-                <div class="prnt-signature-block__line">{{ referral.committee_case.committee_session.doctor.doctor_name }}</div>
+
+            <footer class="prnt-signatures">
+                <div class="prnt-signature-block">
+                    <div class="prnt-signature-block__title">مقرر اللجنة</div>
+                    <div class="prnt-signature-block__space"></div>
+                    <div class="prnt-signature-block__line">.......................</div>
+                </div>
+                <div class="prnt-signature-block">
+                    <div class="prnt-signature-block__title">المستشار الطبي / رئيس اللجنة</div>
+                    <div class="prnt-signature-block__space"></div>
+                    <div class="prnt-signature-block__line">{{ referral.committee_case.committee_session.doctor.doctor_name }}</div>
+                </div>
+            </footer>
+
+            <div class="prnt-footer-user">
+                <span>الموظف المسؤول: {{ request.user.get_full_name|default:request.user.username }}</span>
             </div>
-        </footer>
-    </main>
+        </main>
+    </div>
 
     <script src="{% static 'js/referrals.js' %}"></script>
 </body>

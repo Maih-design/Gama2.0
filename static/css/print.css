@@ -1,188 +1,237 @@
+/* Premium Healthcare Operations Printing Architecture Specification */
 @media print {
-    body {
-        background: #ffffff;
-        color: #000000;
-        font-size: 12pt;
-    }
-
+    /* إخفاء عناصر النظام غير المخصصة للطباعة */
     .cmp-navbar,
     .cmp-pagination,
     .frm-search-wrapper,
     .cmp-btn,
     .tbl-actions,
-    .cmp-alert-container {
-        display: none !important;
-    }
-
-    .lyt-main-content {
-        padding: 0;
-        margin: 0;
-        max-width: 100%;
-    }
-
-    .frm-container,
-    .tbl-wrapper,
-    .dsh-panel {
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-    }
-
-    .print-document-view {
-        direction: rtl;
-        padding: 2cm;
-    }
-}
-
-/* Premium Healthcare Operations Printing Architecture Specification */
-@media print {
-    /* Clear System Navigation and Control UI Viewport Elements */
+    .cmp-alert-container,
     .lyt-sidebar, 
     .lyt-navbar, 
-    .cmp-btn, 
     .frm-container form button,
     .no-print {
         display: none !important;
     }
 
-    /* Core Layout Structural Reset for A4 Hardware Output Boundary Grid */
+    /* تهيئة الصفحة وجسم الوثيقة */
     html, body {
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 12pt !important;
+        font-size: 11pt !important;
         margin: 0 !important;
         padding: 0 !important;
         direction: rtl !important;
-        font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    }
-
-    .lyt-app-wrapper, 
-    .lyt-main-content {
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-        box-shadow: none !important;
-        background: transparent !important;
-    }
-
-    /* Premium Official Medical Document Layout */
-    .prnt-document {
-        padding: 2cm !important;
-        margin: 0 auto !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        page-break-after: always;
-    }
-
-    /* Official Corporate/Ministry Header Matrix */
-    .prnt-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid #047857;
-        padding-bottom: 1.5rem;
-        margin-bottom: 2.5rem;
-    }
-
-    .prnt-header__emblem {
-        text-align: right;
-        font-size: 1.1rem;
-        font-weight: 800;
-        line-height: 1.5;
-        color: #111827;
-    }
-
-    .prnt-header__meta {
-        text-align: left;
-        font-size: 0.95rem;
-        color: #374151;
-        line-height: 1.6;
-    }
-
-    /* Document Title Accentuation Frame */
-    .prnt-title {
-        text-align: center;
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: #047857;
-        margin: 2rem 0;
-        letter-spacing: -0.02em;
-    }
-
-    /* Elegant Grid Form Parameter Mapping Fields */
-    .prnt-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        margin-bottom: 2.5rem;
-    }
-
-    .prnt-field {
-        border-bottom: 1px dashed #9ca3af;
-        padding-bottom: 0.5rem;
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .prnt-field__label {
-        font-weight: 700;
-        color: #4b5563;
-        white-space: nowrap;
-    }
-
-    .prnt-field__value {
-        color: #111827;
-        font-weight: 600;
-    }
-
-    /* Narrative Diagnostic & Prescriptive Text Blocks Blocks */
-    .prnt-block {
-        background: #f9fafb !important;
-        border-right: 4px solid #14b8a6 !important;
-        padding: 1.5rem !important;
-        margin-bottom: 2.5rem !important;
-        border-radius: 4px !important;
+        font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
+    /* الإطار الخارجي المحيط بالجزء المطبوع بالكامل */
+    .prnt-page-border {
+        border: 2px solid #000000 !important;
+        margin: 1cm !important;
+        padding: 1cm !important;
+        box-sizing: border-box !important;
+        min-height: calc(100vh - 2cm);
+        position: relative;
+    }
+
+    .prnt-document {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* الهيدر المطور: يمين، وسط (لوجو)، شمال */
+    .prnt-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border-bottom: 2px solid #047857 !important;
+        padding-bottom: 1rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .prnt-header__right {
+        text-align: right !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        line-height: 1.6 !important;
+        width: 35%;
+    }
+
+    .prnt-header__logo {
+        text-align: center !important;
+        width: 30%;
+    }
+
+    /* صندوق اللوجو التخيلي */
+    .logo-placeholder {
+        border: 1px dashed #9ca3af !important;
+        padding: 10px !important;
+        font-size: 0.9rem !important;
+        color: #4b5563 !important;
+        font-weight: bold !important;
+        display: inline-block !important;
+        min-width: 100px;
+    }
+
+    .prnt-header__left {
+        text-align: left !important;
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+        width: 35%;
+    }
+
+    /* عنوان الخطاب */
+    .prnt-title {
+        text-align: center !important;
+        font-size: 1.6rem !important;
+        font-weight: 800 !important;
+        color: #047857 !important;
+        margin: 1.5rem 0 !important;
+    }
+
+    /* نص التوجيه لمدير المستشفى */
+    .prnt-direction-text {
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        color: #111827 !important;
+        margin-bottom: 2rem !important;
+        line-height: 1.6 !important;
+    }
+
+    .prnt-direction-text .sub-text {
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        color: #374151 !important;
+        display: block !important;
+        margin-top: 0.5rem !important;
+    }
+
+    /* شبكة بيانات المريض الواضحة */
+    .prnt-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.2rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .prnt-field {
+        border-bottom: 1px dashed #6b7280 !important;
+        padding-bottom: 0.4rem !important;
+        display: flex !important;
+        gap: 0.5rem !important;
+    }
+
+    .prnt-field__label {
+        font-weight: 700 !important;
+        color: #374151 !important;
+    }
+
+    .prnt-field__value {
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+
+    /* كتل النصوص (التشخيص والملاحظات) */
+    .prnt-block {
+        background: #f9fafb !important;
+        border-right: 4px solid #047857 !important;
+        padding: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .note-block {
+        border-right-color: #6b7280 !important;
+    }
+
     .prnt-block__title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #047857;
-        margin-bottom: 0.75rem;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        color: #047857 !important;
+        margin: 0 0 0.5rem 0 !important;
     }
 
     .prnt-block__text {
-        font-size: 1.05rem;
-        line-height: 1.8;
-        color: #111827;
+        font-size: 1.05rem !important;
+        line-height: 1.6 !important;
+        color: #111827 !important;
     }
 
-    /* Official Verification Signature Matrix */
+    /* إطار خاص ومميز جداً للإجراء الطبي المطلوب (بناءً على طلبك) */
+    .prnt-procedure-box {
+        border: 2px solid #047857 !important;
+        background: #f0fdf4 !important;
+        padding: 1.2rem !important;
+        margin-bottom: 1.5rem !important;
+        border-radius: 6px !important;
+        text-align: center !important;
+    }
+
+    .prnt-procedure-box__title {
+        font-size: 1.15rem !important;
+        font-weight: 800 !important;
+        color: #047857 !important;
+        margin: 0 0 0.5rem 0 !important;
+    }
+
+    .prnt-procedure-box__value {
+        font-size: 1.4rem !important; /* خط أكبر وأوضح */
+        font-weight: 800 !important;
+        color: #065f46 !important;
+    }
+
+    .prnt-closing {
+        text-align: center !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        margin: 2rem 0 !important;
+    }
+
+    /* قسم التوقيعات أسفل الخطاب */
     .prnt-signatures {
-        margin-top: 5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 1rem;
+        margin-top: 3rem !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        padding: 0 1rem !important;
     }
 
     .prnt-signature-block {
-        text-align: center;
-        width: 200px;
+        text-align: center !important;
+        width: 40% !important;
     }
 
     .prnt-signature-block__title {
-        font-weight: 700;
-        color: #4b5563;
-        margin-bottom: 4rem;
+        font-weight: 700 !important;
+        color: #111827 !important;
+        font-size: 1.05rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .prnt-signature-block__space {
+        height: 1.5cm !important; /* مساحة فارغة للتوقيع والختم */
     }
 
     .prnt-signature-block__line {
-        border-top: 1px solid #111827;
-        padding-top: 0.5rem;
-        font-size: 0.9rem;
-        font-weight: 600;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        color: #111827 !important;
+    }
+
+    /* ذيل الصفحة المخصص لاسم مستخدم النظام (المحرر) */
+    .prnt-footer-user {
+        position: absolute !important;
+        bottom: 0.5cm !important;
+        right: 1cm !important;
+        left: 1cm !important;
+        border-top: 1px solid #d1d5db !important;
+        padding-top: 0.3rem !important;
+        font-size: 0.85rem !important;
+        color: #4b5563 !important;
+        display: flex !important;
+        justify-content: space-between !important;
     }
 }

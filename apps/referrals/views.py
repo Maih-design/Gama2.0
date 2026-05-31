@@ -38,10 +38,10 @@ class IssuedReferralsListView(LoginRequiredMixin, ListView):
 
 
 @login_required
-def create_referral(request, case_id):
+def create_referral(request, case_pk):
     case = get_object_or_404(
         CommitteeCase.objects.select_related('patient', 'recommendation__procedure'), 
-        pk=case_id
+        pk=case_pk
     )
     
     if request.method == 'POST':
@@ -58,7 +58,7 @@ def create_referral(request, case_id):
                     case.status = CaseStatus.APPROVED
                     case.save()
 
-                messages.success(request, _("تم إنشاء الخطاب والتحويل الخارجي للمركز بنجاح."))
+                messages.success(request, _("تم إنشاء خطاب التحويل الخارجي للمركز بنجاح."))
                 return redirect('referrals:print_referral', referral_id=referral.id)
             except ValidationError as e:
                 form.add_error(None, e)

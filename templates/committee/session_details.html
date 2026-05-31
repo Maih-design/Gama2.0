@@ -68,7 +68,7 @@
                                 <em style="font-size: 0.9rem; color: var(--text); font-weight: 500;">{{ case.recommendation|default:"بانتظار المداولة الطبية والفحص..." }}</em>
                             </td>
                             <td class="tbl-actions">
-                                {% if session.status == 'ACT' %}
+                                {% if session.is_active %}
                                     <a href="{% url 'committee:recommendation_form' case.pk %}" class="cmp-btn cmp-btn--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: var(--secondary); color: var(--secondary);">
                                         إقرار التوصية الطبية
                                     </a>
