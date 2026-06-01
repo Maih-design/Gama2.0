@@ -1,8 +1,11 @@
 {% if request.user.is_authenticated %}
+{% load static %}
 <nav class="cmp-navbar">
     <div class="cmp-navbar__container">
         <div class="cmp-navbar__brand">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg>
+            <div class="auth-logo">
+                <img src="{% static 'images/logo.png' %}" alt="System Logo">
+            </div>
             <span>اللجنة العليا للجاما نايف</span>
         </div>
 
