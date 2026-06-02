@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+{% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>وثيقة قرار وتوصية اللجنة الطبية - #CASE-{{ case.pk }}</title>
+    <title>وثيقة قرار وتوصية اللجنة الطبية - #CASE-{{ recommendation.committee_case.pk }}</title>
     <link rel="stylesheet" href="{% static 'css/design_system.css' %}">
     <link rel="stylesheet" href="{% static 'css/print.css' %}">
 </head>
 <body>
     <div class="no-print" style="background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm);">
         <div>
-            <span style="font-weight: 700; color: var(--text);">شاشة معاينة نموذج قرار التوصية الطبية الصادر من الجلسة</span>
+            <span style="font-weight: 700; color: var(--text);">شاشة مراجعة نموذج قرار التوصية الطبية الصادر من اللجنة</span>
         </div>
         <div style="display: flex; gap: 0.75rem;">
             <button class="cmp-btn cmp-btn--secondary" onclick="window.history.back();">العودة للغرفة</button>
@@ -20,53 +21,48 @@
     <main class="prnt-document">
         <header class="prnt-header">
             <div class="prnt-header__emblem">
-                <div>وزارة الصحة والسكان</div>
-                <div>المجالس الطبية المتخصصة الفرعية</div>
-                <div>سجل جلسات اللجنة الطبية الموحدة</div>
+                <div>الادارة العامة للخدمات الطبية</div>
+                <div>الجنة العليا للجاما نايف</div>
             </div>
             <div class="prnt-header__meta">
-                <div><strong>رقم مداولة الحالة:</strong> CASE-{{ case.pk }}</div>
-                <div><strong>رقم الجلسة الانعقادية:</strong> #{{ case.committee_session.pk }}</div>
-                <div><strong>تاريخ انعقاد الجلسة:</strong> {{ case.committee_session.session_date|date:"Y-m-d" }}</div>
+                <div><strong>رقم مداولة الحالة:</strong> CASE-{{ recommendation.committee_case.pk }}</div>
+                <div><strong>رقم الجلسة:</strong> #{{ recommendation.committee_case.committee_session.pk }}</div>
+                <div><strong>تاريخ انعقاد الجلسة:</strong> {{ recommendation.committee_case.committee_session.session_date|date:"Y-m-d" }}</div>
             </div>
         </header>
 
-        <h1 class="prnt-title">تقرير محضر قرار وتوصية اللجنة الطبية المشكلة</h1>
+        <h1 class="prnt-title">تقرير قرار وتوصية اللجنة</h1>
 
         <section class="prnt-grid">
             <div class="prnt-field">
-                <span class="prnt-field__label">اسم المريض بالكامل:</span>
-                <span class="prnt-field__value">{{ case.patient.full_name }}</span>
+                <span class="prnt-field__label">اسم المريض:</span>
+                <span class="prnt-field__value">{{ recommendation.committee_case.patient.full_name }}</span>
             </div>
             <div class="prnt-field">
-                <span class="prnt-field__label">الرقم القومي للمريض:</span>
-                <span class="prnt-field__value" style="font-family: monospace; letter-spacing: 0.05em;">{{ case.patient.national_id }}</span>
+                <span class="prnt-field__label">الرقم القومي:</span>
+                <span class="prnt-field__value" style="font-family: monospace; letter-spacing: 0.05em;">{{ recommendation.committee_case.patient.national_id }}</span>
             </div>
             <div class="prnt-field">
                 <span class="prnt-field__label">التشخيص المبدئي بالملف:</span>
-                <span class="prnt-field__value">{{ case.patient.diagnosis }}</span>
-            </div>
-            <div class="prnt-field">
-                <span class="prnt-field__label">حالة القرار والاعتماد:</span>
-                <span class="prnt-field__value" style="font-weight: bold; color: #047857;">{{ case.get_status_display }}</span>
+                <span class="prnt-field__value">{{ recommendation.committee_case.patient.diagnosis }}</span>
             </div>
         </section>
 
         <section class="prnt-block">
-            <h3 class="prnt-block__title">البند والنص الحرفي للتوصية الطبية والمسار العلاجي الخارجي المقر:</h3>
+            <h3 class="prnt-block__title">التوصية الطبية والخطة العلاجية المقررة:</h3>
             <div class="prnt-block__text" style="white-space: pre-line;">
-                {{ case.recommendation|default:"لا يوجد نص توصية طبية مسجلة أو مقرة للحالة حتى تاريخه." }}
+                {{ recommendation|default:"لا يوجد نص توصية طبية مسجلة أو مقرة للحالة حتى تاريخه." }}
             </div>
         </section>
 
         <footer class="prnt-signatures" style="margin-top: 6rem;">
             <div class="prnt-signature-block">
-                <div class="prnt-signature-block__title">أعضاء ومقرري اللجنة الطبية</div>
-                <div class="prnt-signature-block__line">امضاء وتوقيع أول</div>
+                <div class="prnt-signature-block__title">مقرر اللجنة</div>
+                <div class="prnt-signature-block__line"></div>
             </div>
             <div class="prnt-signature-block">
-                <div class="prnt-signature-block__title">رئيس اللجنة الطبية المستشار</div>
-                <div class="prnt-signature-block__line">{{ case.committee_session.doctor.doctor_name }}</div>
+                <div class="prnt-signature-block__title">رئيس اللجنة/ الاستشاري</div>
+                <div class="prnt-signature-block__line">{{ recommendation.committee_case.committee_session.doctor.doctor_name }}</div>
             </div>
         </footer>
     </main>

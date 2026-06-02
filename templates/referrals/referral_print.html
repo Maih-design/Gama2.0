@@ -15,7 +15,16 @@
             <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">اضغط على زر الطباعة أدناه لتشغيل معالج الطباعة بالجهاز الملحق مباشرة.</div>
         </div>
         <div style="display: flex; gap: 0.75rem;">
-            <button class="cmp-btn cmp-btn--secondary" onclick="window.history.back();">العودة للنظام</button>
+            <a href="{% url 'committee:session_detail' referral.committee_case.committee_session.id %}" class="cmp-btn cmp-btn--secondary" style="
+       display:inline-block;
+       padding:10px 15px;
+       background:#6c757d;
+       color:#fff;
+       text-decoration:none;
+       border-radius:6px;
+   ">
+    العودة للجلسة
+</a>
             <button class="cmp-btn cmp-btn--primary" data-action="hardware-print-trigger">تشغيل معالج الطباعة المباشر للوثيقة</button>
         </div>
     </div>

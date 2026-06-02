@@ -22,10 +22,27 @@
 
 <!-- System Global Analytics Performance Grid -->
 <div class="lyt-grid-dashboard">
-    {% include 'partials/stats_card.html' with stat_type='patients' stat_label='إجمالي المرضى المسجلين' stat_value=total_patients|default:"1,248" %}
-    {% include 'partials/stats_card.html' with stat_type='sessions' stat_label='اللجان والاجتماعات المنعقدة' stat_value=total_sessions|default:"42" %}
-    {% include 'partials/stats_card.html' with stat_type='cases' stat_label='الحالات الطبية المعروضة' stat_value=total_cases|default:"3,891" %}
-    {% include 'partials/stats_card.html' with stat_type='referrals' stat_label='الخطابات والتحويلات الصادرة' stat_value=total_referrals|default:"512" %}
+
+    {% include 'partials/stats_card.html' with 
+        stat_type='patients'
+        stat_label='إجمالي المرضى المسجلين'
+        stat_value=total_patients %}
+
+    {% include 'partials/stats_card.html' with 
+        stat_type='sessions'
+        stat_label='إجمالي الجلسات'
+        stat_value=total_sessions %}
+
+    {% include 'partials/stats_card.html' with 
+        stat_type='cases'
+        stat_label='الحالات المسجلة على الجلسة الحالية'
+        stat_value=active_session_cases %}
+
+    {% include 'partials/stats_card.html' with 
+        stat_type='referrals'
+        stat_label='إجمالي التحويلات الصادرة'
+        stat_value=total_referrals %}
+
 </div>
 
 <!-- Workflow Quick Action Engine Links Grid Layout -->
@@ -136,7 +153,9 @@
             <ul class="hmp-printable-card__list">
                 <li class="hmp-printable-card__item">البطاقة الشخصية (سارية المفعول)</li>
                 <li class="hmp-printable-card__item">شهادة الميلاد المميكنة (للقصر)</li>
-                <li class="hmp-printable-card__item">البطاقة الصحية أو التأمينية المفعلة</li>
+                <li class="hmp-printable-card__item">أصل وصورة البطاقة الصحية للموظفين والمعاشات وكارنية التأمين الصحي للمواليد والطلبة</li>
+                <li class="hmp-printable-card__item">خطاب جهة العمل أو اثبات قيد</li>
+                <li class="hmp-printable-card__item">تقرير المستشفى</li>
                 <li class="hmp-printable-card__item">التقارير الطبية والتحاليل والأشعة الطبية الحديثة</li>
             </ul>
             <button class="cmp-btn cmp-btn--secondary hmp-printable-card__btn" id="hmpPrintRequirementsBtn" style="width: 100%; gap: 0.5rem;">

@@ -50,14 +50,32 @@ class CommitteeSessionCreateView(LoginRequiredMixin, CreateView):
     form_class = CommitteeSessionForm
     template_name = 'committee/create_session.html'
 
+    @transaction.atomic
     def form_valid(self, form):
+
+        CommitteeSession.objects.filter(
+            status=SessionStatus.ACTIVE
+        ).update(
+            status=SessionStatus.CLOSED
+        )
+
         form.instance.status = SessionStatus.ACTIVE
+
         response = super().form_valid(form)
-        messages.success(self.request, _("تم إنشاء الجلسة بنجاح كجلسة معلقة."))
+
+        messages.success(
+            self.request,
+            _("تم إنشاء الجلسة الجديدة وتفعيلها وإغلاق الجلسة السابقة تلقائياً.")
+        )
+
         return response
 
     def get_success_url(self):
-        return reverse('committee:session_add_cases', kwargs={'pk': self.object.pk})
+        return reverse(
+            'committee:session_add_cases',
+            kwargs={'pk': self.object.pk}
+        )
+
 
 
 class CommitteeSessionDetailView(LoginRequiredMixin, DetailView):
@@ -116,10 +134,12 @@ class PendingCasesListView(LoginRequiredMixin, ListView):
 
 
 @login_required
-def add_recommendation(request, pk):
+def add_recommendation(request, session_pk, case_pk):
     case = get_object_or_404(
-        CommitteeCase.objects.select_related('patient', 'committee_session'), 
-    )
+    CommitteeCase.objects.select_related('patient', 'committee_session'),
+    pk=case_pk,
+    committee_session_id=session_pk
+)
     
     # Logic Hook: Try grabbing an existing recommendation for an update form loop
     recommendation = getattr(case, 'recommendation', None)

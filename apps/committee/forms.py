@@ -10,18 +10,27 @@ class CommitteeSessionForm(forms.ModelForm):
         model = CommitteeSession
         fields = ['session_date', 'doctor']
         widgets = {
-            'session_date': forms.DateInput(attrs={'type': 'date', 'class': 'frm-input'}),
+            'session_date': forms.DateInput(
+                attrs={'type': 'date', 'class': 'frm-input'}
+            ),
         }
 
-    def clean_status(self):
-        status = self.cleaned_data.get('status')
-        if status == SessionStatus.ACTIVE:
-            active_sessions = CommitteeSession.objects.filter(status=SessionStatus.ACTIVE)
-            if self.instance and self.instance.pk:
-                active_sessions = active_sessions.exclude(pk=self.instance.pk)
-            if active_sessions.exists():
-                raise ValidationError(_("لا يمكن تفعيل هذه الجلسة. توجد لجنة أخرى نشطة حالياً بالنظام."))
-        return status
+    def clean_session_date(self):
+        session_date = self.cleaned_data.get('session_date')
+
+        existing_session = CommitteeSession.objects.filter(
+            session_date=session_date
+        )
+
+        if self.instance.pk:
+            existing_session = existing_session.exclude(pk=self.instance.pk)
+
+        if existing_session.exists():
+            raise ValidationError(
+                "توجد لجنة مسجلة بالفعل بنفس تاريخ الانعقاد."
+            )
+
+        return session_date
 
 
 class CommitteeCaseForm(forms.ModelForm):

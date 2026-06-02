@@ -6,12 +6,12 @@
 {% block content %}
 <div class="cmp-page-header">
     <div>
-        <h1 class="cmp-page-header__title">سجل والمنظومة الرقمية لخطابات التحويل الصادرة</h1>
-        <p class="cmp-page-header__subtitle">مراجعة خطابات المرضى الموجهة للمراكز والمستشفيات الخارجية، إدارة تعديل الوجهات، أو إلغاء التراخيص.</p>
+        <h1 class="cmp-page-header__title"> قائمة خطابات التحويل الصادرة</h1>
+        <p class="cmp-page-header__subtitle">مراجعة خطابات المرضى الموجهة للمراكز والمستشفيات الخارجية، إدارة تعديل الوجهات، أو إلغاء الخطابات.</p>
     </div>
     <div>
         <a href="{% url 'referrals:pending_referrals' %}" class="cmp-btn cmp-btn--primary">
-            <span>عرض طابور الانتظار لإصدار الخطابات</span>
+            <span>عرض قائمة الانتظار لإصدار الخطابات</span>
         </a>
     </div>
 </div>
@@ -25,9 +25,9 @@
                     <thead>
                         <tr>
                             <th>رقم الخطاب الموحد</th>
-                            <th>اسم المريض بالكامل</th>
+                            <th>اسم المريض</th>
                             <th>الرقم القومي</th>
-                            <th>المركز والمستشفى الخارجي المستهدف</th>
+                            <th>المركز والمستشفى المحول إليه</th>
                             <th>تاريخ ووقت التثبيت الأصلي</th>
                             <th>الحالة التشغيلية للخطاب</th>
                             <th>إجراءات الإدارة والمخرجات</th>
@@ -71,7 +71,7 @@
                                         تعديل الوجهة الطبية
                                     </button>
                                     <a href="{% url 'referrals:cancel_referral' referral.pk %}" class="cmp-btn cmp-btn--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; color: var(--danger); border-color: rgba(220, 38, 38, 0.2);" onclick="return confirm('هل أنت متأكد من رغبتك في إلغاء وثيقة خطاب التحويل الطبي الحالي وسحب الترخيص الخارجي للمريض؟');">
-                                        إلغاء الترخيص
+                                        إلغاء الخطاب
                                     </a>
                                 {% else %}
                                     <a href="{% url 'referrals:reissue_referral' referral.pk %}" class="cmp-btn cmp-btn--primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">إعادة تفعيل وإصدار الخطاب</a>

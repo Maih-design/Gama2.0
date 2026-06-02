@@ -12,22 +12,27 @@ from apps.referrals.models import Referral
 
 @login_required
 def homepage(request):
-    """
-    Main premium operational control dashboard gateway.
-    Aggregates high-level healthcare operations metrics for the landing interface.
-    """
-    # Fetch real-time operation metrics for the SaaS dashboard view
     active_session = CommitteeSession.objects.filter(is_active=True).first()
-    pending_cases_count = CommitteeCase.objects.filter(status='PEN').count()
-    active_referrals_count = Referral.objects.filter(status="ISSUED").count()
-    
-    context = {
-        'active_session': active_session,
-        'pending_cases_count': pending_cases_count,
-        'active_referrals_count': active_referrals_count,
-    }
-    return render(request, 'core/homepage.html', context)
 
+    total_patients = Patient.objects.count()
+    total_sessions = CommitteeSession.objects.count()
+    total_referrals = Referral.objects.count()
+    active_session_cases = 0
+   
+    active_session_cases = (
+    CommitteeCase.objects.filter(committee_session=active_session).count()
+    if active_session else 0
+    )
+
+    context = {
+        'total_patients': total_patients,
+        'total_sessions': total_sessions,
+        'active_session_cases': active_session_cases,
+        'total_referrals': total_referrals,
+        'active_session': active_session,
+    }
+
+    return render(request, 'core/homepage.html', context)
 
 @login_required
 def patient_search_api(request):

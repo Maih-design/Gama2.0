@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>بيان مسوغات ومستندات العرض على اللجان الطبية</title>
@@ -13,7 +14,7 @@
         </div>
         <div style="display: flex; gap: 0.75rem;">
             <button class="cmp-btn cmp-btn--secondary" onclick="window.history.back();">العودة لشاشة النظام الرئيسية</button>
-            <button class="cmp-btn cmp-btn--primary" data-action="hardware-print-trigger">طباعة كارت المسوغات فوراً للمريض</button>
+            <button class="cmp-btn cmp-btn--primary" data-action="hardware-print-trigger">طباعة كارت المستندات فوراً للمريض</button>
         </div>
     </div>
 
@@ -28,7 +29,7 @@
             </div>
         </header>
 
-        <h2 class="prnt-title" style="font-size: 1.4rem; margin: 1.5rem 0;">بيان وقائمة المستندات والمسوغات المطلوبة للعرض على اللجنة الطبية الطارئة العليا</h2>
+        <h2 class="prnt-title" style="font-size: 1.4rem; margin: 1.5rem 0;">بيان وقائمة المستندات المطلوبة للعرض على اللجنة العليا للجاما نايف</h2>
         
         <p style="font-size: 1rem; color: #374151; line-height: 1.6; margin-bottom: 2rem; font-weight: 500; text-align: justify;">
             يرجى من مرافقي المريض أو صاحب الشأن المباشر مراجعة القائمة الاسترشادية أدناه وتجهيز كامل أصول المستندات والملفات والوثائق الرسمية المطلوبة طيه بدقة تامة لتسليمها لأمانة ومقرري اللجنة، وتفادي استبعاد أو إرجاء بث القرار الطبي النهائي لعدم اكتمال السجل الفني:
@@ -39,19 +40,27 @@
                 <tbody>
                     <tr style="border-bottom: 1px solid #e5e7eb;">
                         <td style="padding: 1rem 0.5rem; font-size: 1.2rem; font-weight: bold; width: 40px; color: #047857;">[  ]</td>
-                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">أصل بطاقة الرقم القومي السارية للمريض (أو بطاقة ولي الأمر للقصر).</td>
+                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">صورة بطاقة الرقم القومي السارية للمريض (أو بطاقة ولي الأمر للقصر).</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #e5e7eb;">
                         <td style="padding: 1rem 0.5rem; font-size: 1.2rem; font-weight: bold; color: #047857;">[  ]</td>
-                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">شهادة الميلاد المميكنة الرسمية (لجميع الحالات العمرية التي لم تبلغ السن القانوني).</td>
+                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">شهادة الميلاد المميكنة (لجميع الحالات العمرية التي لم تبلغ السن القانوني).</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #e5e7eb;">
                         <td style="padding: 1rem 0.5rem; font-size: 1.2rem; font-weight: bold; color: #047857;">[  ]</td>
-                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">أصل البطاقة الصحية أو الدفتر التأميني المفعل للموظفين أو الخاضعين للمظلة.</td>
+                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">أصل وصورة البطاقة الصحية للموظفين والمعاشات أو الكارنية للمواليد والطلبة.</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #e5e7eb;">
                         <td style="padding: 1rem 0.5rem; font-size: 1.2rem; font-weight: bold; color: #047857;">[  ]</td>
-                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">كافة التقارير والفحوصات الطبية والأشعات والتحاليل الحديثة الصادرة في الـ 3 أشهر الأخيرة.</td>
+                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">خطاب جهة العمل للموظفين وخطاب اثبات القيد للطلبة.</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 1rem 0.5rem; font-size: 1.2rem; font-weight: bold; color: #047857;">[  ]</td>
+                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">أصل تقرير المستشفى.</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 1rem 0.5rem; font-size: 1.2rem; font-weight: bold; color: #047857;">[  ]</td>
+                        <td style="padding: 1rem 0.5rem; font-size: 1.1rem; font-weight: 700; color: #111827;">كافة التقارير والفحوصات الطبية والأشعات والتحاليل الحديثة الصادرة.</td>
                     </tr>
                 </tbody>
             </table>
@@ -59,7 +68,7 @@
 
         <div class="prnt-block" style="border-right-color: #047857 !important; background: #f0fdf4 !important; margin-bottom: 1rem !important;">
             <div class="prnt-block__text" style="font-size: 0.95rem; font-weight: 600; color: #065f46; text-align: center; line-height: 1.6;">
-                ملاحظة هامة: الحضور لمقر انعقاد اللجنة يتم في تمام الساعة التاسعة صباحاً بمقر الفرع التابع له المريض في الموعد المحدد له رسمياً من قبل منسق جدول الأعمال بالنظام الالكتروني.
+                ملاحظة هامة: الجنة تنعقد يوم الثلاثاء من كل اسبوع بمقر الادارة العامة للخدمات الطبية.
             </div>
         </div>
     </main>
