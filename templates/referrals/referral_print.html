@@ -34,7 +34,6 @@
             
             <header class="prnt-header">
                 <div class="prnt-header__right">
-                    <div>منظومة إدارة اللجنة العليا للجاما نايف</div>
                     <div>الإدارة العامة للخدمات الطبية</div>
                 </div>
                 
@@ -52,7 +51,7 @@
             <h1 class="prnt-title">خطاب تحويل طبي</h1>
 
             <div class="prnt-direction-text">
-                السيد الدكتور / مدير مستشفى ( <span style="color: #047857;">{{ referral.referral_center.name }}</span> ) ،،
+                السيد الدكتور / مدير وحدة الجاما نايف والتابعة لمستشفى  ( <span style="color: #047857;">{{ referral.referral_center.name }}</span> ) ،،
             </div>
 
             <section class="prnt-grid">
@@ -102,19 +101,16 @@
             {% endif %}
 
             <div class="prnt-closing">
-                وتفضلوا بقبول وافر الاحترام والتقدير ،،
+               <p> وطبقا للتعاقد المبرم بين الهيئة والمستشفى</p>
+               <p>وعلى أن ترسل المطالبة المالية للمراجعة الفنية والسداد و خصما على حساب .......................</p>
+               <p>وتفضلوا بقبول وافر الاحترام والتقدير ،،</p>
             </div>
 
             <footer class="prnt-signatures">
                 <div class="prnt-signature-block">
-                    <div class="prnt-signature-block__title">مقرر اللجنة</div>
+                    <div class="prnt-signature-block__title">مدير الأدارة العامة للخدمات الطبية</div>
                     <div class="prnt-signature-block__space"></div>
                     <div class="prnt-signature-block__line">.......................</div>
-                </div>
-                <div class="prnt-signature-block">
-                    <div class="prnt-signature-block__title">المستشار الطبي / رئيس اللجنة</div>
-                    <div class="prnt-signature-block__space"></div>
-                    <div class="prnt-signature-block__line">{{ referral.committee_case.committee_session.doctor.doctor_name }}</div>
                 </div>
             </footer>
 

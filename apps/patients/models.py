@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
-from apps.core.constants import GenderChoices, GovernorateChoices, BranchChoices, DocumentTypeChoices
+from apps.core.constants import GenderChoices, GovernorateChoices, BranchChoices, DocumentTypeChoices, InsuranceLawChoices
 
 # Create your models here.
 # Kept clean for general extensions or abstract base classes if needed in the future
@@ -35,6 +35,8 @@ class Patient(models.Model):
     diagnosis = models.TextField(verbose_name=_("التشخيص الطبي المبدئي"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("تاريخ التسجيل"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("تاريخ التعديل"))
+    insurance_no = models.CharField(max_length=20, verbose_name=_("الرقم التأميني"))
+    insurance_law = models.CharField(max_length=3, choices=InsuranceLawChoices.choices, verbose_name=_("القانون"))
 
     class Meta:
         verbose_name = _("مريض")

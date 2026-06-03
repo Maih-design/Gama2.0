@@ -75,3 +75,9 @@ class DocumentTypeChoices(models.TextChoices):
     MEDICAL_REPORT = 'REP', _('تقرير طبي')
     LAB_RESULTS = 'LAB', _('نتائج التحاليل')
     RADIOLOGY = 'RAD', _('الأشعة')
+
+class InsuranceLawChoices(models.TextChoices):
+    RETAIRED = 'RET', _('معاش ق79')
+    STUDENT = 'STD', _('طلبة')
+    CHILD = 'CID', _('مواليد ق99')
+    EMPLOYE = 'EMP', _('موظف ق79')

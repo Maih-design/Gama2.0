@@ -1,7 +1,7 @@
 <div class="dsh-card-stat">
     <div>
         <p class="dsh-card-stat__label">{{ stat_label }}</p>
-        <p class="dsh-card-stat__value">{{ stat_value }}</p>
+        <p class="dsh-card-stat__value">{{ stat_value|default:0 }}</p>
     </div>
     <div class="dsh-card-stat__icon-box">
         {% if stat_type == 'patients' %}

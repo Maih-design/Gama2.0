@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}الرئيسية - نظام إدارة اللجان الطبية الفاخر{% endblock %}
+{% block title %}الرئيسية - نظام إدارة اللجنة العيا للجاما نايف{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
@@ -22,27 +22,10 @@
 
 <!-- System Global Analytics Performance Grid -->
 <div class="lyt-grid-dashboard">
-
-    {% include 'partials/stats_card.html' with 
-        stat_type='patients'
-        stat_label='إجمالي المرضى المسجلين'
-        stat_value=total_patients %}
-
-    {% include 'partials/stats_card.html' with 
-        stat_type='sessions'
-        stat_label='إجمالي الجلسات'
-        stat_value=total_sessions %}
-
-    {% include 'partials/stats_card.html' with 
-        stat_type='cases'
-        stat_label='الحالات المسجلة على الجلسة الحالية'
-        stat_value=active_session_cases %}
-
-    {% include 'partials/stats_card.html' with 
-        stat_type='referrals'
-        stat_label='إجمالي التحويلات الصادرة'
-        stat_value=total_referrals %}
-
+    {% include 'partials/stats_card.html' with stat_type='patients' stat_label='إجمالي المرضى المسجلين' stat_value=total_patients|default:0 %}
+    {% include 'partials/stats_card.html' with stat_type='sessions' stat_label='اجمالي جلسات اللجنة' stat_value=total_sessions|default:0 %}
+    {% include 'partials/stats_card.html' with stat_type='cases' stat_label='الحالات الطبية باللجنة النشطة' stat_value=active_session_cases|default:0 %}
+    {% include 'partials/stats_card.html' with stat_type='referrals' stat_label='الخطابات والتحويلات الصادرة' stat_value=total_referrals|default:0 %}
 </div>
 
 <!-- Workflow Quick Action Engine Links Grid Layout -->
