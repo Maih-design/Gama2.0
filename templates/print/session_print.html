@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>محضر اللجنة الطبية</title>
+    <link rel="stylesheet" href="{% static 'css/design_system.css' %}">
+    <link rel="stylesheet" href="{% static 'css/print.css' %}">
+    <style>
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th, td{
+            border:1px solid #000;
+            padding:10px;
+            text-align:right;
+        }
+
+        th{
+            background:#f0f0f0;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<button class="no-print" onclick="window.print()">
+    طباعة
+</button>
+<header class="prnt-header">
+    <div class="prnt-header__emblem">
+        <div>الهيئة العامة للتأمين الصحي</div>
+        <div>الادارة العامة للخدمات الطبية</div>
+    </div>
+</header>
+
+<div class="header">
+    <h1>اللجنة العليا للجاما نايف</h1>
+</div>
+
+<div class="info">
+    <p><strong>رقم الجلسة:</strong> {{ session.id }}</p>
+
+    <p>
+        <strong>تاريخ الجلسة:</strong>
+        {{ session.session_date|date:"Y-m-d" }}
+    </p>
+
+    <p>
+        <strong>الاستشاري:</strong>
+        {{ session.doctor.doctor_name }}
+    </p>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>اسم المريض</th>
+            <th>التشخيص</th>
+            <th>التوصية</th>
+            <th>الإجراء</th>
+            <th>الجهة</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for case in session.cases.all %}
+
+        <tr>
+
+            <td>{{ forloop.counter }}</td>
+
+            <td>
+                {{ case.patient.full_name }}
+            </td>
+
+            <td>
+                {{ case.patient.diagnosis }}
+            </td>
+
+            <td>
+                {% if case.recommendation %}
+                    {{ case.recommendation.recommendation_text }}
+                {% else %}
+                    ---
+                {% endif %}
+            </td>
+
+            <td>
+                {% if case.recommendation %}
+                    {{ case.recommendation.procedure }}
+                {% else %}
+                    ---
+                {% endif %}
+            </td>
+            <td>
+                {% if case.recommendation and case.recommendation.referral %}
+                    {{ case.recommendation.referral.referral_center.name }}
+                {% else %}
+                    ---
+                {% endif %}
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+</table>
+<footer class="prnt-signatures" style="margin-top: 6rem;">
+    <div class="prnt-signature-block">
+        <div class="prnt-signature-block__title">مقرر اللجنة</div>
+        <div class="prnt-signature-block__line"></div>
+    </div>
+    <div class="prnt-signature-block">
+        <div class="prnt-signature-block__title">الاستشاري</div>
+        <div class="prnt-signature-block__line">{{ recommendation.committee_case.committee_session.doctor.doctor_name }}</div>
+    </div>
+</footer>
+
+</body>
+</html>

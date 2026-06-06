@@ -93,4 +93,11 @@
         </div>
     {% endif %}
 </div>
+<div>
+    <a href="{% url 'committee:print_session' session.pk %}"
+   target="_blank"
+   class="cmp-btn cmp-btn--primary">
+    طباعة محضر اللجنة
+</a>
+</div>
 {% endblock %}

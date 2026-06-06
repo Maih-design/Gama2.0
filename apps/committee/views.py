@@ -86,7 +86,8 @@ class CommitteeSessionDetailView(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         return CommitteeSession.objects.select_related('doctor').prefetch_related(
             'cases__patient',
-            'cases__recommendation__procedure'
+            'cases__recommendation__procedure',
+            'cases__recommendation__referral__referral_center'
         )
 
 
@@ -194,3 +195,13 @@ def _evaluate_and_close_session(session_obj):
     if total_cases > 0 and total_cases == resolved_cases:
         session_obj.status = SessionStatus.CLOSED
         session_obj.save()
+        
+def print_session(request, pk):
+    session = get_object_or_404(
+        CommitteeSession.objects.select_related('doctor').prefetch_related(
+            'cases__patient',
+            'cases__recommendation__procedure'
+        ),
+        pk=pk
+    )
+    return render(request, 'print/session_print.html', {'session': session})
