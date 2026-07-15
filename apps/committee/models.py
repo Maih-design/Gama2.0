@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from apps.core.constants import SessionStatus, CaseStatus
 from apps.patients.models import Patient
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Doctor(models.Model):
     doctor_name = models.CharField(max_length=255, unique=True, verbose_name=_("اسم الطبيب"))
@@ -18,24 +19,32 @@ class Doctor(models.Model):
 
 
 class Procedure(models.Model):
-    CATEGORY_CHOICES = [('diagnostic', _("فحوصات")), ('therapeutic', _("اجراء علاجي"))]
+    CATEGORY_CHOICES = [('diagnostic', _("فحوصات")), ('gamaknife', _("جاما نايف")), ('radiosurgery', _("جراحة إشعاعية"))]
 
     category = models.CharField(
         max_length=50,
         choices=CATEGORY_CHOICES,
-        default='اجراء علاجي',
+        default='جاما نايف',
         verbose_name=_("تصنيف الإجراء الطبي")
     )
     name = models.CharField(max_length=255, unique=True, verbose_name=_("اسم الإجراء"))
     requires_referral = models.BooleanField(default=False, verbose_name=_("يتطلب تحويل لمركز خارجي"))
+    price = models.CharField(
+        choices= [('27000 سبعة وعشرون ألف ', _("27000")), ('28000 ثمانية وعشرون ألف', _("28000"))],
+        verbose_name= _("السعر"),
+        null=True,
+        blank=True,
+    )
+    
+    
 
     class Meta:
         verbose_name = _("إجراء طبي")
         verbose_name_plural = _("الإجراءات الطبية")
-        ordering = ['category', 'name']
+        ordering = ['category', 'name', 'price']
 
     def __str__(self):
-        return f"{self.name} ({self.category})"
+        return f"{self.name}"
 
 
 class CommitteeSession(models.Model):
@@ -114,6 +123,16 @@ class CommitteeRecommendation(models.Model):
     recommendation_text = models.TextField(verbose_name=_("نص التوصية النهائي"))
     notes = models.TextField(blank=True, null=True, verbose_name=_("ملاحظات إضافية للقرار"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("تاريخ التوصية"))
+    no_of_sessions = models.PositiveSmallIntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)])
+
+    @property
+    def referral_procedure_text(self):
+
+        if self.procedure.category == "radiosurgery":
+            return f"جلسة { self.procedure } بواقع عدد {self.no_of_sessions} جلسات بعد موافقة السلطة المختصة بإدراج الخدمة بتكلفة {self.procedure.price} جنية فقط لاغير"
+
+        else :
+            return self.procedure
 
     class Meta:
         verbose_name = _("توصية اللجنة")

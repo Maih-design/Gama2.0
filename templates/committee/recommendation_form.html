@@ -146,6 +146,25 @@
                 {% endif %}
 
             </div>
+            <div class="frm-group">
+
+                <label class="frm-label">
+
+                    عدد الجلسات
+
+                </label>
+
+                {{ form.no_of_sessions }}
+
+                {% if form.no_of_sessions.errors %}
+                    <ul class="frm-errors">
+                        {% for error in form.no_of_sessions.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+            </div>
 
             <!-- التوصية -->
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+{% load static %}    
+    <head>
+        <meta charset="UTF-8">
+        <title>محضر جلسة لجنة الجاما نايف - المنعقدة بتاريخ -{{ session.created_at }}</title>
+        <link rel="stylesheet" href="{% static 'css/design_system.css' %}">
+        <link rel="stylesheet" href="{% static 'css/print.css' %}"> 
+    </head>
+    <body>
+        <div class="no-print" style="background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm);">
+            <div>
+                <span style="font-weight: 700; color: var(--text);">شاشة مراجعة محضر الجلسة </span>
+                <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">اضغط على زر الطباعة أدناه لتشغيل معالج الطباعة بالجهاز الملحق مباشرة.</div>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <a href="{% url 'committee:session_detail' session.id %}" class="cmp-btn cmp-btn--secondary" style="
+                display:inline-block;
+                padding:10px 15px;
+                background:#6c757d;
+                color:#fff;
+                text-decoration:none;
+                border-radius:6px;
+                ">
+                العودة للجلسة
+                </a>
+                <button class="cmp-btn cmp-btn--primary" data-action="hardware-print-trigger">تشغيل معالج الطباعة المباشر للوثيقة</button>
+            </div>
+        </div>
+
+    </body>
+</html>

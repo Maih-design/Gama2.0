@@ -1,0 +1,388 @@
+
+:root {
+
+    /* Colors */
+    --primary: #047857;
+    --primary-hover: #065f46;
+
+    --secondary: #6b7280;
+    --secondary-hover: #4b5563;
+
+    --background: #e5e7eb;
+    --surface: #ffffff;
+
+    --text: #111827;
+    --text-muted: #6b7280;
+
+    --border: #d1d5db;
+
+    /* Effects */
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.08);
+    --shadow-md: 0 10px 25px rgba(0,0,0,.12);
+
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+
+    /* Spacing */
+    --space-xs: .25rem;
+    --space-sm: .5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+}
+
+
+/* =========================================================
+   Global
+   ========================================================= */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   Document Preview
+   ========================================================= */
+
+.prnt-page-border {
+
+    width: 210mm;
+    min-height: 297mm;
+
+    margin: 30px auto;
+
+    padding: 25mm;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    box-shadow: var(--shadow-md);
+}
+
+.prnt-document {
+    width: 100%;
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.prnt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 2px solid var(--primary);
+
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.prnt-header__right {
+    width: 35%;
+    text-align: right;
+    font-weight: 700;
+}
+
+.prnt-header__logo {
+    width: 30%;
+    text-align: center;
+}
+
+.prnt-header__logo img {
+    max-height: 90px;
+    max-width: 100%;
+}
+
+.prnt-header__left {
+    width: 35%;
+    text-align: left;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   Title
+   ========================================================= */
+
+.prnt-title {
+    text-align: center;
+
+    color: var(--primary);
+
+    font-size: 2rem;
+    font-weight: 800;
+
+    margin: 1.5rem 0 2rem;
+}
+
+
+/* =========================================================
+   Intro Text
+   ========================================================= */
+
+.prnt-direction-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.8;
+
+    margin-bottom: 2rem;
+}
+
+
+/* =========================================================
+   Patient Data Grid
+   ========================================================= */
+
+.prnt-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 1rem;
+
+    margin-bottom: 2rem;
+}
+
+.prnt-field {
+    display: flex;
+    gap: .5rem;
+
+    padding-bottom: .5rem;
+
+    border-bottom: 1px dashed var(--border);
+}
+
+.prnt-field__label {
+    font-weight: 700;
+}
+
+.prnt-field__value {
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   Text Blocks
+   ========================================================= */
+
+.prnt-block {
+    background: #f9fafb;
+
+    border-right: 4px solid var(--primary);
+
+    padding: 1rem;
+
+    margin-bottom: 1.5rem;
+
+    border-radius: var(--radius-sm);
+}
+
+.prnt-block__title {
+    color: var(--primary);
+
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    margin: 0 0 .75rem;
+}
+
+.prnt-block__text {
+    line-height: 1.8;
+}
+
+.note-block {
+    border-right-color: var(--secondary);
+}
+
+
+/* =========================================================
+   Procedure Box
+   ========================================================= */
+
+.prnt-procedure-box {
+
+    border: 2px solid var(--primary);
+
+    background: #f0fdf4;
+
+    padding: 1.25rem;
+
+    border-radius: var(--radius-sm);
+
+    margin-bottom: 2rem;
+
+    text-align: right;
+}
+
+.prnt-procedure-box__title {
+
+    color: var(--primary);
+
+    font-size: 1.2rem;
+    font-weight: 800;
+
+    margin-bottom: .75rem;
+
+    text-align: right;
+}
+
+.prnt-procedure-box__value {
+
+    color: var(--primary-hover);
+
+    font-size: 1.5rem;
+    font-weight: 800;
+
+    display: block;
+    width: 100%;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   Closing
+   ========================================================= */
+
+.prnt-closing {
+    text-align: right;
+
+    margin: 2rem 0;
+
+    font-size: 1.05rem;
+
+    line-height: 1.9;
+}
+
+.prnt-closing p {
+    margin: 0 0 .5rem;
+    text-align: right;
+}
+
+
+/* =========================================================
+   Signatures
+   ========================================================= */
+
+.prnt-signatures {
+
+    margin-top: 3rem;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.prnt-signature-block {
+
+    width: 40%;
+
+    text-align: center;
+}
+
+.prnt-signature-block__title {
+    font-weight: 700;
+}
+
+.prnt-signature-block__space {
+    height: 100px;
+}
+
+.prnt-signature-block__line {
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   Footer User
+   ========================================================= */
+
+.prnt-footer-user {
+
+    margin-top: 3rem;
+
+    padding-top: 1rem;
+
+    border-top: 1px solid var(--border);
+
+    color: var(--text-muted);
+
+    font-size: .9rem;
+}
+
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
+.cmp-btn {
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    border: none;
+
+    padding: .75rem 1.25rem;
+
+    border-radius: var(--radius-sm);
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+    transition: .2s;
+}
+
+.cmp-btn--primary {
+    background: var(--primary);
+    color: white;
+}
+
+.cmp-btn--primary:hover {
+    background: var(--primary-hover);
+}
+
+.cmp-btn--secondary {
+    background: var(--secondary);
+    color: white;
+}
+
+.cmp-btn--secondary:hover {
+    background: var(--secondary-hover);
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .prnt-page-border {
+        width: 100%;
+        min-height: auto;
+
+        margin: 0;
+        padding: 1rem;
+    }
+
+    .prnt-grid {
+        grid-template-columns: 1fr;
+    }
+}

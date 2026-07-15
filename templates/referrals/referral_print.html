@@ -25,7 +25,7 @@
    ">
     العودة للجلسة
 </a>
-            <button class="cmp-btn cmp-btn--primary" data-action="hardware-print-trigger">تشغيل معالج الطباعة المباشر للوثيقة</button>
+            <button class="cmp-btn cmp-btn--primary" data-action="hardware-print-trigger">الطباعة</button>
         </div>
     </div>
 
@@ -69,7 +69,7 @@
                 </div>
                 <div class="prnt-field">
                     <span class="prnt-field__label">الفرع التابع:</span> 
-                    <span class="prnt-field__value">{{ referral.committee_case.patient.get_affiliated_branch_display|default:"الفرع الرئيسي العام" }}</span>
+                    <span class="prnt-field__value">{{ referral.committee_case.patient.get_affiliated_branch_display }}</span>
                 </div>
                 <div class="prnt-field">
                     <span class="prnt-field__label">محل الاقامة:</span>
@@ -84,10 +84,10 @@
                 </div>
             </section>
 
-            <section class="prnt-procedure-box">
+            <section class="prnt-procedure-box" style="text-align: right;">
                 <h3 class="prnt-procedure-box__title">الإجراء الطبي المطلوب المعتمد:</h3>
                 <div class="prnt-procedure-box__value">
-                    {{ referral.committee_case.recommendation.procedure.name }}
+                    {{ referral.committee_case.recommendation.referral_procedure_text }}
                 </div>
             </section>
 
@@ -102,7 +102,7 @@
 
             <div class="prnt-closing">
                <p> وطبقا للتعاقد المبرم بين الهيئة والمستشفى</p>
-               <p>وعلى أن ترسل المطالبة المالية للمراجعة الفنية والسداد و خصما على حساب .......................</p>
+               <p>وعلى أن ترسل المطالبة المالية للمراجعة الفنية والسداد و خصما على حساب رئاسة الهيئة</p>
                <p>وتفضلوا بقبول وافر الاحترام والتقدير ،،</p>
             </div>
 

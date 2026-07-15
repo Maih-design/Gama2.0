@@ -167,7 +167,7 @@
         padding: 1.2rem !important;
         margin-bottom: 1.5rem !important;
         border-radius: 6px !important;
-        text-align: center !important;
+        text-align: right !important;
     }
 
     .prnt-procedure-box__title {
@@ -175,16 +175,18 @@
         font-weight: 800 !important;
         color: #047857 !important;
         margin: 0 0 0.5rem 0 !important;
+        text-align: right !important;
     }
 
     .prnt-procedure-box__value {
         font-size: 1.4rem !important; /* خط أكبر وأوضح */
         font-weight: 800 !important;
         color: #065f46 !important;
+        text-align: right !important;
     }
 
     .prnt-closing {
-        text-align: center !important;
+        text-align: right !important;
         font-size: 1.05rem !important;
         font-weight: 600 !important;
         margin: 2rem 0 !important;

@@ -45,8 +45,8 @@ class CommitteeCaseForm(forms.ModelForm):
 class CommitteeRecommendationForm(forms.ModelForm):
     class Meta:
         model = CommitteeRecommendation
-        fields = ['procedure', 'recommendation_text', 'notes']
+        fields = ['procedure', 'recommendation_text', 'notes','no_of_sessions']
         widgets = {
-            'recommendation_text': forms.Textarea(attrs={'rows': 4}),
+            'recommendation_text': forms.Textarea(attrs={'rows': 2}),
             'notes': forms.Textarea(attrs={'rows': 2}),
         }
