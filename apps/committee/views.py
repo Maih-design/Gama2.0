@@ -28,17 +28,17 @@ class CommitteeSessionListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         # الجلسة المفتوحة الحالية
-        active_session = CommitteeSession.objects.filter(
-            status=SessionStatus.ACTIVE
+        preparing_session = CommitteeSession.objects.filter(
+            status=SessionStatus.PREPARING
         ).first()
 
-        context['active_session'] = active_session
+        context['preparing_session'] = preparing_session
 
         # باقي الجلسات
         previous_sessions = CommitteeSession.objects.all()
 
-        if active_session:
-            previous_sessions = previous_sessions.exclude(id=active_session.id)
+        if preparing_session:
+            previous_sessions = previous_sessions.exclude(id=preparing_session.id)
 
         context['previous_sessions'] = previous_sessions.order_by('-session_date')
 
@@ -54,18 +54,20 @@ class CommitteeSessionCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
 
         CommitteeSession.objects.filter(
-            status=SessionStatus.ACTIVE
+            status=CommitteeSession.status.PREPARING
         ).update(
-            status=SessionStatus.CLOSED
+            status=CommitteeSession.status.COMPLETED
         )
 
-        form.instance.status = SessionStatus.ACTIVE
+
+
+        form.instance.status = CommitteeSession.status.PREPARING
 
         response = super().form_valid(form)
 
         messages.success(
             self.request,
-            _("تم إنشاء الجلسة الجديدة وتفعيلها وإغلاق الجلسة السابقة تلقائياً.")
+            _("تم إنشاء قيد التحضير وتحويل الجلسة السابقة الى مكتملة.")
         )
 
         return response
@@ -80,15 +82,34 @@ class CommitteeSessionCreateView(LoginRequiredMixin, CreateView):
 
 class CommitteeSessionDetailView(LoginRequiredMixin, DetailView):
     model = CommitteeSession
-    template_name = 'committee/session_details.html'
-    context_object_name = 'session'
+    template_name = "committee/session_details.html"
+    context_object_name = "session"
 
     def get_queryset(self):
-        return CommitteeSession.objects.select_related('doctor').prefetch_related(
-            'cases__patient',
-            'cases__recommendation__procedure',
-            'cases__referrals__referral_center'
+        return (
+            CommitteeSession.objects
+            .select_related("doctor")
+            .prefetch_related(
+                "cases__patient",
+                "cases__recommendation__procedure",
+                "cases__referrals__referral_center",
+            )
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        show_print_modal = self.request.GET.get("show_print_modal") == "1"
+
+        missing_cases = self.object.cases.filter(
+            recommendation__isnull=True
+        )
+
+        context["show_print_modal"] = show_print_modal
+        context["missing_cases"] = missing_cases
+        context["missing_cases_count"] = missing_cases.count()
+
+        return context
 
 
 @login_required
@@ -157,9 +178,6 @@ def add_recommendation(request, session_pk, case_pk):
                 case.status = CaseStatus.APPROVED
                 case.save()
                 
-                # Helper calculation to close session dynamically if fully decided
-                _evaluate_and_close_session(case.committee_session)
-
             messages.success(request, _("تم حفظ التوصية والقرار الطبي بنجاح."))
             
             if rec.procedure.requires_referral:
@@ -176,34 +194,39 @@ def add_recommendation(request, session_pk, case_pk):
 
 
 @login_required
-def print_recommendation(request, rec_id):
-    recommendation = get_object_or_404(
-        CommitteeRecommendation.objects.select_related('committee_case__patient', 'procedure', 'committee_case__committee_session__doctor'),
-        pk=rec_id
-    )
-    return render(request, 'print/recommendation_print.html', {'recommendation': recommendation})
-
-
-def _evaluate_and_close_session(session_obj):
-    """
-    Internal business engine workflow automation validation rules.
-    Closes session automatically when all structural cases contain assigned recommendations.
-    """
-    total_cases = session_obj.cases.count()
-    resolved_cases = session_obj.cases.filter(status__in=[CaseStatus.APPROVED, CaseStatus.REJECTED]).count()
-    
-    if total_cases > 0 and total_cases == resolved_cases:
-        session_obj.status = SessionStatus.CLOSED
-        session_obj.save()
-
-@login_required
 def print_session(request, pk):
+
     session = get_object_or_404(
-        CommitteeSession.objects.select_related('doctor'),
+        CommitteeSession.objects.select_related("doctor"),
         pk=pk
     )
-    recommendation =  get_object_or_404(
-        CommitteeRecommendation.objects.select_related('patient', 'procedure'),
+
+    # لا يسمح بطباعة جلسة قيد التجهيز
+    if session.status == SessionStatus.PREPARING:
+        messages.error(
+            request,
+            "لا يمكن طباعة جلسة قيد التجهيز، يجب إنهاء الجلسة أولاً."
+        )
+        return redirect(
+            "committee:session_detail",
+            pk=session.pk
+        )
+
+    force_print = request.GET.get("force") == "1"
+
+    missing_cases = session.cases.filter(
+        recommendation__isnull=True
     )
 
-    return render(request, 'print/session_details_print.html', {'session': session})
+    if missing_cases.exists() and not force_print:
+        return redirect(
+            f"{reverse('committee:session_detail', kwargs={'pk': session.pk})}?show_print_modal=1"
+        )
+
+    return render(
+        request,
+        "print/session_print.html",
+        {
+            "session": session,
+        }
+    )

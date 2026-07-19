@@ -119,14 +119,38 @@
             
             <button type="button" class="cmp-btn cmp-btn--secondary" onclick="window.history.back();">إلغاء الإجراء</button>
             
-            {% if not form.instance.pk %}
-                <button type="submit" class="cmp-btn cmp-btn--secondary" id="btnSaveAndAddNew">حفظ وتسجيل مريض آخر</button>
-            {% endif %}
-            
-            <button type="submit" class="cmp-btn cmp-btn--primary" id="btnPrimaryFormSubmit">حفظ البيانات واعتمادها</button>
+        {% if not form.instance.pk %}
+
+        <div class="cmp-form-actions">
+
+            <button
+                type="submit"
+                name="save_and_add_another"
+                class="cmp-btn cmp-btn--secondary">
+                حفظ وإضافة مريض آخر
+            </button>
+
+            <button
+                type="submit"
+                class="cmp-btn cmp-btn--primary">
+                حفظ والعودة إلى الجلسة قيد التجهيز
+            </button>
+
         </div>
-    </form>
-</div>
+
+        {% else %}
+
+        <div class="cmp-form-actions">
+
+            <button
+                type="submit"
+                class="cmp-btn cmp-btn--primary">
+                حفظ التعديلات
+            </button>
+
+        </div>
+
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

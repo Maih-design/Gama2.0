@@ -54,8 +54,8 @@ class BranchChoices(models.TextChoices):
 
 
 class SessionStatus(models.TextChoices):
-    ACTIVE = 'ACT', _('نشطة حالياً')
-    CLOSED = 'CMP', _('منتهية')
+    PREPARING = "PREPARING", "قيد التجهيز"
+    COMPLETED = "COMPLETED", "مكتملة"
 
 class CaseStatus(models.TextChoices):
     PENDING = 'PND', _('قيد الانتظار')

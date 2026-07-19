@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -5,6 +7,7 @@ from django.db.models import Q
 
 # Dynamic imports based on your app architecture setup
 # Adjust the app names/paths if your models live elsewhere
+from apps.core.constants import SessionStatus
 from apps.patients.models import Patient
 from apps.committee.models import CommitteeSession, CommitteeCase
 from apps.referrals.models import Referral
@@ -12,27 +15,39 @@ from apps.referrals.models import Referral
 
 @login_required
 def homepage(request):
-    active_session = CommitteeSession.objects.filter(is_active=True).first()
+
+    CommitteeSession.objects.filter(
+        status=SessionStatus.PREPARING,
+        session_date__lt=date.today()
+    ).update(
+        status=SessionStatus.COMPLETED
+    )
+
+    active_session = CommitteeSession.objects.filter(
+        status=SessionStatus.PREPARING
+    ).first()
 
     total_patients = Patient.objects.count()
     total_sessions = CommitteeSession.objects.count()
     total_referrals = Referral.objects.count()
-    active_session_cases = 0
-   
+
     active_session_cases = (
-    CommitteeCase.objects.filter(committee_session=active_session).count()
-    if active_session else 0
+        CommitteeCase.objects.filter(
+            committee_session=active_session
+        ).count()
+        if active_session else 0
     )
 
     context = {
-        'total_patients': total_patients,
-        'total_sessions': total_sessions,
-        'active_session_cases': active_session_cases,
-        'total_referrals': total_referrals,
-        'active_session': active_session,
+        "total_patients": total_patients,
+        "total_sessions": total_sessions,
+        "active_session_cases": active_session_cases,
+        "total_referrals": total_referrals,
+        "active_session": active_session,
     }
 
-    return render(request, 'core/homepage.html', context)
+    return render(request, "core/homepage.html", context)
+
 
 @login_required
 def patient_search_api(request):

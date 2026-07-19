@@ -69,19 +69,19 @@
                 <span>اللجنة المنعقدة حالياً بالنظام</span>
             </h2>
             
-            {% if active_session %}
+            {% if preparing_session %}
                 <div class="hmp-widget-item">
                     <div>
-                        <span style="font-weight: 700; color: var(--text);">{{ active_session }}</span>
-                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">رئيس اللجنة الحالي: {{ active_session.doctor.doctor_name }}</div>
+                        <span style="font-weight: 700; color: var(--text);">{{ preparing_session }}</span>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">رئيس اللجنة الحالي: {{ preparing_session.doctor.doctor_name }}</div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <span class="cmp-badge cmp-badge--success">نشطة ومفتوحة الآن</span>
-                        <a href="{% url 'committee:session_detail' active_session.pk %}" class="cmp-btn cmp-btn--secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">إدارة ملف الجلسة</a>
+                        <a href="{% url 'committee:session_detail' preparing_session.pk %}" class="cmp-btn cmp-btn--secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">إدارة ملف الجلسة</a>
                     </div>
                 </div>
             {% else %}
-                {% include 'partials/empty_state.html' with title="لا توجد لجان نشطة بالوقت الراهن" text="يمكنك تشكيل وانعقاد جلسة لجنة طبية جديدة مباشرة لربط وإدراج ملفات المرضى الطبية بها." action_url="/committee/create/" action_text="إنشاء وتفعيل جلسة الآن" %}
+                {% include 'partials/empty_state.html' with title="لا توجد لجان نشطة بالوقت الراهن" text="يمكنك تشكيل جلسة لجنة طبية جديدة مباشرة لربط وإدراج ملفات المرضى الطبية بها." action_url="/committee/session/create/" action_text="إنشاء وتفعيل جلسة الآن" %}
             {% endif %}
         </div>
 

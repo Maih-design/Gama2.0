@@ -49,52 +49,45 @@ class Procedure(models.Model):
 
 class CommitteeSession(models.Model):
 
-    STATUS_CHOICES = [
-        ("active", "Active"),
-        ("closed", "Closed"),
-    ]
 
-    session_date = models.DateField()
+    session_date = models.DateField(
+        verbose_name=_("تاريخ الجلسة")
+    )
 
     doctor = models.ForeignKey(
         Doctor,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name=_("الطبيب")
     )
 
     status = models.CharField(
         max_length=20,
-        choices=STATUS_CHOICES,
-        default="active"
-    )
-
-    is_active = models.BooleanField(
-        default=True
+        choices=SessionStatus.choices,
+        default=SessionStatus.PREPARING,
+        verbose_name=_("الحالة")
     )
 
     notes = models.TextField(
-        blank=True
+        blank=True,
+        verbose_name=_("ملاحظات")
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
+        verbose_name=_("تاريخ الإنشاء")
     )
 
-    def save(self, *args, **kwargs):
+    class Meta:
+        verbose_name = _("جلسة لجنة")
+        verbose_name_plural = _("جلسات اللجان")
+        ordering = ["-session_date", "-created_at"]
 
-        if self.is_active:
-
-            CommitteeSession.objects.filter(
-                is_active=True
-            ).exclude(
-                pk=self.pk
-            ).update(
-                is_active=False,
-                status="closed"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["session_date"],
+                name="unique_committee_session_per_day"
             )
-
-            self.status = "active"
-
-        super().save(*args, **kwargs)
+        ]
 
     def __str__(self):
         return f"جلسة {self.session_date}"

@@ -8,15 +8,15 @@
     <div>
         <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
             <h1 class="cmp-page-header__title">{{ session.session_title }}</h1>
-            <span class="cmp-badge {% if session.is_active %}cmp-badge--success{% else %}cmp-badge--warning{% endif %}">
-                {% if session.is_active %}نشطة حالياً{% else %}مؤرشفة ومغلقة{% endif %}
+            <span class="cmp-badge {% if session.status == 'PREPARING' %}cmp-badge--success{% else %}cmp-badge--warning{% endif %}">
+                {% if session.status == 'PREPARING' %}قيد التحضير{% else %}مكتملة{% endif %}
             </span>
         </div>
         <p class="cmp-page-header__subtitle">رئيس اللجنة الطبية الحالي المسؤول: <strong>{{ session.doctor.doctor_name }}</strong> | تاريخ العمل المعتمد: {{ session.session_date|date:"Y-m-d" }}</p>
     </div>
     <div style="display: flex; gap: 0.75rem;">
         <a href="{% url 'committee:sessions_list' %}" class="cmp-btn cmp-btn--secondary">العودة للسجل الموحد</a>
-        {% if session.is_active %}
+        {% if session.status == 'PREPARING' %}
             <a href="{% url 'committee:session_add_cases' session.pk %}" class="cmp-btn cmp-btn--primary">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 <span>إلحاق وإدراج مرضى للجلسة الآن</span>
@@ -68,7 +68,7 @@
                                 <em style="font-size: 0.9rem; color: var(--text); font-weight: 500;">{{ case.recommendation|default:"بانتظار المداولة الطبية والفحص..." }}</em>
                             </td>
                             <td class="tbl-actions">
-                                {% if session.is_active %}
+                                {% if session.status == 'PREPARING' %}
                                     <a href="{% url 'committee:add_recommendation' case.committee_session.id case.id %}" class="cmp-btn cmp-btn--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: var(--secondary); color: var(--secondary);">
                                         إقرار التوصية الطبية
                                     </a>
@@ -87,7 +87,7 @@
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1rem; color: var(--border-focus);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem;">جدول أعمال اللجنة فارغ</h4>
             <p style="font-size: 0.95rem; margin-bottom: 1.5rem;">لم يتم ربط أو إدراج أي مريض بجلسة الانعقاد الحالية الطبية بعد.</p>
-            {% if session.status == 'ACT' %}
+            {% if session.status == 'PREPARING' %}
                 <a href="{% url 'committee:add_cases_to_session' session.pk %}" class="cmp-btn cmp-btn--primary" style="display: inline-flex;">بدء ربط وإدراج ملفات المرضى للجلسة الآن</a>
             {% endif %}
         </div>
@@ -100,4 +100,62 @@
     طباعة محضر اللجنة
 </a>
 </div>
+
+{% if show_print_modal %}
+<div id="printWarningModal" class="cmp-modal-overlay">
+    <div class="cmp-modal">
+
+        <h2>تنبيه قبل الطباعة</h2>
+
+        <p style="margin-bottom:1rem;">
+            يوجد
+            <strong>{{ missing_cases_count }}</strong>
+            حالة لم يتم تسجيل قرار اللجنة لها.
+        </p>
+
+        <ul style="margin-bottom:1.5rem;">
+            {% for case in missing_cases %}
+                <li>{{ case.patient.full_name }}</li>
+            {% endfor %}
+        </ul>
+
+        <div style="display:flex; gap:1rem; justify-content:flex-end;">
+
+            <button
+                class="cmp-btn cmp-btn--secondary"
+                onclick="closePrintModal()">
+                العودة
+            </button>
+
+            <a href="{% url 'committee:print_session' session.pk %}?force=1"
+               target="_blank"
+               class="cmp-btn cmp-btn--primary">
+                طباعة على أي حال
+            </a>
+
+        </div>
+
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
+
+<script>
+
+function closePrintModal() {
+    window.location.href = "{% url 'committee:session_detail' session.pk %}";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const modal = document.getElementById("printWarningModal");
+
+    if (modal) {
+        modal.style.display = "flex";
+    }
+
+});
+
+</script>
+

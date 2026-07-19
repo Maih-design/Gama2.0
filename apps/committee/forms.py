@@ -6,28 +6,34 @@ from .models import CommitteeSession, CommitteeCase, CommitteeRecommendation, Do
 from django.utils import timezone
 
 class CommitteeSessionForm(forms.ModelForm):
+
     class Meta:
         model = CommitteeSession
-        fields = ['session_date', 'doctor']
+        fields = ["session_date", "doctor"]
+
         widgets = {
-            'session_date': forms.DateInput(
-                attrs={'type': 'date', 'class': 'frm-input'}
+            "session_date": forms.DateInput(
+                attrs={
+                    "type": "date",
+                    "class": "frm-input",
+                }
             ),
         }
 
     def clean_session_date(self):
-        session_date = self.cleaned_data.get('session_date')
+        session_date = self.cleaned_data["session_date"]
 
-        existing_session = CommitteeSession.objects.filter(
+        queryset = CommitteeSession.objects.filter(
             session_date=session_date
         )
 
+        # في حالة تعديل جلسة موجودة
         if self.instance.pk:
-            existing_session = existing_session.exclude(pk=self.instance.pk)
+            queryset = queryset.exclude(pk=self.instance.pk)
 
-        if existing_session.exists():
+        if queryset.exists():
             raise ValidationError(
-                "توجد لجنة مسجلة بالفعل بنفس تاريخ الانعقاد."
+                "تم إنشاء جلسة بالفعل في هذا التاريخ، ولا يمكن إنشاء جلستين في نفس اليوم."
             )
 
         return session_date

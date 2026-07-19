@@ -4,74 +4,43 @@
 {% block title %}إدراج المرضى للجلسة الطبية #{{ session_obj.pk }}{% endblock %}
 
 {% block content %}
-<div class="cmp-page-header">
-    <div>
-        <h1 class="cmp-page-header__title">إدراج الحالات والملفات الطبية بجدول أعمال الجلسة</h1>
-        <p class="cmp-page-header__subtitle">ابحث عن ملفات المرضى المسجلين بالنظام لإدراجهم مباشرة أو قم بإنشاء ملف مريض فوري موازي.</p>
-    </div>
-    <div>
-        <a href="{% url 'committee:session_detail' session_obj.pk %}" class="cmp-btn cmp-btn--secondary">إنهاء العودة للجلسة</a>
-    </div>
+<div style="display:flex; gap:0.75rem; align-items:center;">
+
+    <a href="{% url 'patients:patient_create' %}"
+       class="cmp-btn cmp-btn--primary"
+       style="background: var(--success); border-color: var(--success);">
+
+        + إضافة مريض جديد
+
+    </a>
+
+    <a href="{% url 'committee:session_detail' session_obj.pk %}"
+       class="cmp-btn cmp-btn--secondary">
+
+        العودة للجلسة
+
+    </a>
+
 </div>
 
-<div style="display: grid; grid-template-columns: 3fr 2fr; gap: 2rem; align-items: flex-start;">
+<div style="display: flex; justify-content:center;">
     
     <!-- Left Workspace Container: Search and Result Select Pipeline Matrix -->
-    <div class="dsh-panel">
-        <h3 class="dsh-panel__title">البحث السريع بالسجل وربط الحالة الحالية فوراً للجنة</h3>
+    <div class="dsh-panel" style="width:100%; max-width:1000px;">
+        <h3 class="dsh-panel__title">البحث السريع بالسجل وربط الحالة الحالية للجنة</h3>
         
         <div style="margin-bottom: 1.5rem;">
-            {% include 'partials/search_bar.html' with placeholder='ادخل الاسم بالكامل أو الرقم القومي لبدء المطابقة بالسجل...' %}
+            {% include 'partials/search_bar.html' with placeholder='ادخل الاسم أو الرقم القومي لبدء البحث...' %}
         </div>
 
         <div id="committeeSearchPatientTargetResults" style="display: flex; flex-direction: column; gap: 1rem;">
             <!-- Placeholder Dynamic State Context Information Loader Frame -->
             <div style="text-align: center; color: var(--text-muted); padding: 3rem 1rem; border: 1px dashed var(--border); border-radius: var(--radius-md);">
-                ابدأ بكتابة معايير الاستعلام في حقل البحث أعلاه لاستقطاب وعرض بطاقات المرضى وتأكيد ربط الحالة بجلسة اللجنة.
+                ابدأ بكتابة معايير البحث لتظه.
             </div>
         </div>
     </div>
-
-    <!-- Right Workspace Container: Inline Quick Patient Creation Implementation -->
-    <div class="dsh-panel" style="background: rgba(4, 120, 87, 0.01); border: 1px dashed var(--primary);">
-        <h3 class="dsh-panel__title" style="color: var(--primary);">المريض غير مدرج بالسجل؟ إنشاء ملف سريع له</h3>
-        
-        <form id="inlineQuickPatientForm" method="post" action="{% url 'patients:patient_create' %}" novalidate>
-            {% csrf_token %}
-            <input type="hidden" name="inline_redirect_session" value="{{ session_obj.pk }}">
-            
-            <div class="frm-group">
-                <label class="frm-label">الرقم القومي (14 رقم) *</label>
-                <input type="text" name="national_id" class="frm-input" required maxlength="14">
-            </div>
-
-            <div class="frm-group">
-                <label class="frm-label">الاسم رباعي بالكامل *</label>
-                <input type="text" name="full_name" class="frm-input" required>
-            </div>
-
-            <div class="frm-row">
-                <div class="frm-group">
-                    <label class="frm-label">تاريخ الميلاد *</label>
-                    <input type="date" name="birth_date" class="frm-input" required>
-                </div>
-                <div class="frm-group">
-                    <label class="frm-label">الجنس *</label>
-                    <select name="gender" class="frm-select" required>
-                        <option value="M">ذكر</option>
-                        <option value="F">أنثى</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="frm-group">
-                <label class="frm-label">التشخيص الطبي المبدئي السريع المعروض *</label>
-                <textarea name="diagnosis" class="frm-textarea" rows="3" required></textarea>
-            </div>
-
-            <button type="submit" class="cmp-btn cmp-btn--primary" style="width: 100%; margin-top: 1rem;">حفظ المريض بالسجل وإدراجه تلقائياً للجنة</button>
-        </form>
-    </div>
+   
 </div>
 {% endblock %}
 

@@ -3,12 +3,15 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib import messages
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
+from apps.core.constants import SessionStatus, CaseStatus
 from .models import Patient, PatientDocument
 from .forms import PatientForm, PatientDocumentForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.db.models import Q
+from apps.committee.models import CommitteeSession, CommitteeCase
 
 class PatientListView(LoginRequiredMixin, ListView):
     model = Patient
@@ -40,11 +43,52 @@ class PatientListView(LoginRequiredMixin, ListView):
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
     form_class = PatientForm
-    template_name = 'patients/patient_form.html'
+    template_name = "patients/patient_form.html"
 
-    def get_success_url(self):
-        messages.success(self.request, _("تم تسجيل المريض بنجاح."))
-        return reverse('patients:patient_profile', kwargs={'pk': self.object.pk})
+    def form_valid(self, form):
+        self.object = form.save()
+
+        preparing_session = CommitteeSession.objects.filter(
+            status=SessionStatus.PREPARING
+        ).first()
+
+        if preparing_session:
+            CommitteeCase.objects.get_or_create(
+                committee_session=preparing_session,
+                patient=self.object,
+                defaults={
+                    "status": CaseStatus.PENDING
+                }
+            )
+
+            messages.success(
+                self.request,
+                _(
+                    f"تم تسجيل المريض بنجاح، وتمت إضافته إلى جلسة اللجنة بتاريخ {preparing_session.session_date}."
+                )
+            )
+        else:
+            messages.warning(
+                self.request,
+                _("تم تسجيل المريض، ولكن لا توجد جلسة قيد التجهيز لإضافته إليها.")
+            )
+
+        # زر: حفظ وإضافة مريض آخر
+        if "save_and_add_another" in self.request.POST:
+            return redirect("patients:patient_create")
+
+        # زر: حفظ والعودة للجلسة
+        if preparing_session:
+            return redirect(
+                "committee:session_detail",
+                pk=preparing_session.pk
+            )
+
+        # لو مفيش جلسة Preparing
+        return redirect(
+            "patients:patient_profile",
+            pk=self.object.pk
+        )
 
 
 class PatientProfileView(LoginRequiredMixin, DetailView):

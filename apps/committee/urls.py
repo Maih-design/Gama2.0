@@ -18,6 +18,6 @@ urlpatterns = [
     
     # Printing Actions Routing Matrix (Consolidated)
     path('session/<int:session_pk>/case/<int:case_pk>/recommendation/', views.add_recommendation, name='add_recommendation'),
-    path('recommendation/<int:rec_id>/print/', views.print_recommendation, name='print_recommendation'),
+    # path('recommendation/<int:rec_id>/print/', views.print_recommendation, name='print_recommendation'),
     path('session/<int:pk>/print/', views.print_session, name='print_session'),
 ]
